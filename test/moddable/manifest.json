@@ -1,0 +1,16 @@
+{
+    "include": [
+        "$(MODDABLE)/examples/manifest_base.json",
+        "../../native/manifest.json"
+    ],
+    "config": {
+        "controller": "ssd1306",
+        "size": "128x64",
+        "address": "0x3C"
+    },
+    "modules": {
+        "*": [
+            "./main"
+        ]
+    }
+}

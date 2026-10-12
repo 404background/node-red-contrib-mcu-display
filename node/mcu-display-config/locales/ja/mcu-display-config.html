@@ -1,0 +1,21 @@
+<script type="text/html" data-help-name="mcu-display-config">
+    <p>I2C で接続した SSD1306 / SSD1315 の OLED ディスプレイです。<code>display</code> ノードがここに描画します。</p>
+
+    <h3>プロパティ</h3>
+    <dl class="message-properties">
+        <dt>コントローラ</dt>
+        <dd>SSD1306 または SSD1315（0.96 インチ・0.91 インチのモジュールはどちらかを使っています）。</dd>
+        <dt>サイズ</dt>
+        <dd>128 x 64（0.96 インチ）または 128 x 32（0.91 インチ）ピクセル。</dd>
+        <dt>I2C アドレス</dt>
+        <dd>ほとんどのモジュールは <code>0x3C</code>、アドレスのジャンパを変えたものは <code>0x3D</code> です。裏面に書かれた <code>0x78</code> / <code>0x7A</code> は、同じアドレスを 1 ビット左にずらした表記です。</dd>
+        <dt>SDA ピン / SCL ピン</dt>
+        <dd>GPIO 番号。空にするとボードの既定の I2C ピンを使います。</dd>
+        <dt>180°回転</dt>
+        <dd>上下逆に取り付けたモジュール用に、表示を上下左右反転します。</dd>
+    </dl>
+
+    <h3>詳細</h3>
+    <p>フロー開始時に画面を消去します。ディスプレイが応答しないときはノードに <code>display not found</code> と表示し、メッセージが来るたびに接続し直します。</p>
+    <p>アドレスが違えば複数のディスプレイを同時に使えます（それぞれに設定ノードを1つずつ）。</p>
+</script>

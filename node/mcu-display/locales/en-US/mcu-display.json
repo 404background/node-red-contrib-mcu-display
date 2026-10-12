@@ -1,0 +1,29 @@
+{
+    "mcu-display": {
+        "label": {
+            "display": "Display",
+            "line": "Line",
+            "size": "Text size",
+            "align": "Align",
+            "clear": "Before drawing",
+            "name": "Name"
+        },
+        "size": {
+            "1": "1 (21 characters x 8 lines)",
+            "2": "2 (10 characters x 4 lines)",
+            "3": "3 (7 characters x 2 lines)",
+            "4": "4 (5 characters x 2 lines)"
+        },
+        "align": {
+            "left": "Left",
+            "center": "Center",
+            "right": "Right"
+        },
+        "clear": {
+            "area": "Clear the lines of the text",
+            "all": "Clear the screen",
+            "none": "Draw over the screen"
+        },
+        "tip": "Shows <code>msg.payload</code>. Lines are 8 pixels high: a 128 x 64 display has lines 1 - 8, a 128 x 32 display lines 1 - 4. <code>\n</code> starts a new line. ASCII characters and the symbols <code>° ± × ÷ µ ¥ ← → ↑ ↓ ● ○ ■ □ ▲ ▼ ♥ ★ ♪ ✓ … █</code> can be shown."
+    }
+}

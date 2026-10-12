@@ -1,0 +1,21 @@
+<script type="text/html" data-help-name="mcu-display-config">
+    <p>An SSD1306 or SSD1315 OLED display on I2C. <code>display</code> nodes draw on it.</p>
+
+    <h3>Properties</h3>
+    <dl class="message-properties">
+        <dt>Controller</dt>
+        <dd>SSD1306 or SSD1315 (the 0.96 inch and 0.91 inch modules use one of these).</dd>
+        <dt>Size</dt>
+        <dd>128 x 64 (0.96 inch) or 128 x 32 (0.91 inch) pixels.</dd>
+        <dt>I2C address</dt>
+        <dd><code>0x3C</code> for most modules, <code>0x3D</code> when the address jumper is set. The address printed on the back (<code>0x78</code> / <code>0x7A</code>) is the same address shifted left by one bit.</dd>
+        <dt>SDA pin / SCL pin</dt>
+        <dd>GPIO numbers. Empty: the board's default I2C pins.</dd>
+        <dt>Rotate 180°</dt>
+        <dd>Turns the picture upside down, for modules mounted the other way round.</dd>
+    </dl>
+
+    <h3>Details</h3>
+    <p>The screen is cleared when the flow starts. When the display does not answer, the nodes show <code>display not found</code> and every message tries again.</p>
+    <p>Several displays can be used at once on different addresses (one configuration node each).</p>
+</script>

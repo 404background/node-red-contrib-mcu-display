@@ -1,0 +1,18 @@
+{
+    "mcu-display-config": {
+        "label": {
+            "name": "名前",
+            "controller": "コントローラ",
+            "size": "サイズ",
+            "address": "I2C アドレス",
+            "sda": "SDA ピン",
+            "scl": "SCL ピン",
+            "hz": "I2C 速度",
+            "rotate": "180°回転"
+        },
+        "placeholder": {
+            "pin": "ボードの既定"
+        },
+        "tip": "<b>配線</b>：VCC を 3.3 V、GND、SDA、SCL。ピンを空にするとボードの既定の I2C ピンを使います。多くのモジュールのアドレスは <code>0x3C</code>（アドレスのジャンパを変えたものは <code>0x3D</code>）です。SSD1306 と SSD1315 はどちらも同じように使えます。"
+    }
+}

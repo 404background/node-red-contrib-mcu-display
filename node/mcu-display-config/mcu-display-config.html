@@ -1,0 +1,76 @@
+<script type="text/javascript">
+    (function () {
+        function pin(v) {
+            return (v === "") || (v === undefined) || /^\d{1,2}$/.test(String(v));
+        }
+        RED.nodes.registerType("mcu-display-config", {
+            category: "config",
+            paletteLabel: "display config",
+            defaults: {
+                name: { value: "" },
+                controller: { value: "ssd1306", required: true, validate: function (v) {
+                    return v === "ssd1306" || v === "ssd1315";
+                }},
+                size: { value: "128x64", required: true, validate: function (v) {
+                    return v === "128x64" || v === "128x32";
+                }},
+                address: { value: "0x3C", required: true, validate: function (v) {
+                    var n = Number(v);
+                    return /^(0x[0-9a-fA-F]{1,2}|\d{1,3})$/.test(String(v).trim()) && n >= 0x03 && n <= 0x77;
+                }},
+                sda: { value: "", validate: pin },
+                scl: { value: "", validate: pin },
+                hz: { value: "400000", required: true },
+                rotate: { value: false }
+            },
+            label: function () {
+                return this.name || (this.controller || "ssd1306").toUpperCase() + " " + (this.size || "128x64") + " " + (this.address || "0x3C");
+            }
+        });
+    })();
+</script>
+
+<script type="text/html" data-template-name="mcu-display-config">
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> <span data-i18n="mcu-display-config.label.name"></span></label>
+        <input type="text" id="node-config-input-name">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-controller"><i class="fa fa-microchip"></i> <span data-i18n="mcu-display-config.label.controller"></span></label>
+        <select id="node-config-input-controller">
+            <option value="ssd1306">SSD1306</option>
+            <option value="ssd1315">SSD1315</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-size"><i class="fa fa-arrows-alt"></i> <span data-i18n="mcu-display-config.label.size"></span></label>
+        <select id="node-config-input-size">
+            <option value="128x64">128 x 64</option>
+            <option value="128x32">128 x 32</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-address"><i class="fa fa-at"></i> <span data-i18n="mcu-display-config.label.address"></span></label>
+        <input type="text" id="node-config-input-address" style="width: 100px;" placeholder="0x3C">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-sda"><i class="fa fa-random"></i> <span data-i18n="mcu-display-config.label.sda"></span></label>
+        <input type="text" id="node-config-input-sda" style="width: 100px;" data-i18n="[placeholder]mcu-display-config.placeholder.pin">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-scl"><i class="fa fa-clock-o"></i> <span data-i18n="mcu-display-config.label.scl"></span></label>
+        <input type="text" id="node-config-input-scl" style="width: 100px;" data-i18n="[placeholder]mcu-display-config.placeholder.pin">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-hz"><i class="fa fa-tachometer"></i> <span data-i18n="mcu-display-config.label.hz"></span></label>
+        <select id="node-config-input-hz" style="width: 140px;">
+            <option value="400000">400 kHz</option>
+            <option value="100000">100 kHz</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-rotate"><i class="fa fa-repeat"></i> <span data-i18n="mcu-display-config.label.rotate"></span></label>
+        <input type="checkbox" id="node-config-input-rotate" style="width: auto;">
+    </div>
+    <div class="form-tips" data-i18n="[html]mcu-display-config.tip"></div>
+</script>

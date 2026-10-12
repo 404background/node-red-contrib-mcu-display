@@ -1,0 +1,49 @@
+{
+  "name": "@background404/node-red-contrib-mcu-display",
+  "version": "0.1.0",
+  "description": "Node-RED MCU nodes to show text and symbols on SSD1306 / SSD1315 OLED displays over I2C",
+  "files": [
+    "node/",
+    "native/",
+    "examples/",
+    "docs/",
+    "test/moddable/",
+    "manifest.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "node-red": {
+    "version": ">=1.3.7",
+    "nodes": {
+      "mcu-display-config": "node/mcu-display-config/mcu-display-config.js",
+      "mcu-display": "node/mcu-display/mcu-display.js"
+    }
+  },
+  "scripts": {
+    "test": "node --no-warnings test/screen/screen_test.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/404background/node-red-contrib-mcu-display.git"
+  },
+  "keywords": [
+    "node-red",
+    "mcu",
+    "esp32",
+    "display",
+    "oled",
+    "ssd1306",
+    "ssd1315",
+    "i2c",
+    "moddable"
+  ],
+  "author": "background404",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/404background/node-red-contrib-mcu-display/issues"
+  },
+  "homepage": "https://github.com/404background/node-red-contrib-mcu-display#readme"
+}

@@ -1,0 +1,18 @@
+{
+    "mcu-display-config": {
+        "label": {
+            "name": "Name",
+            "controller": "Controller",
+            "size": "Size",
+            "address": "I2C address",
+            "sda": "SDA pin",
+            "scl": "SCL pin",
+            "hz": "I2C speed",
+            "rotate": "Rotate 180°"
+        },
+        "placeholder": {
+            "pin": "board default"
+        },
+        "tip": "<b>Wiring</b>: VCC to 3.3 V, GND, SDA and SCL. Leave the pins empty to use the board's default I2C pins. Most modules answer at <code>0x3C</code> (<code>0x3D</code> when the address jumper is set). SSD1306 and SSD1315 work the same way here."
+    }
+}

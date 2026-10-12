@@ -1,0 +1,285 @@
+[
+    {
+        "id": "d15b1a0000000001",
+        "type": "tab",
+        "label": "OLED display",
+        "disabled": false,
+        "info": "SSD1306 / SSD1315 OLED (128 x 64) on the board's default I2C pins, address 0x3C.\nWire VCC to 3.3 V, GND, SDA and SCL. Set the controller, size, address and pins in the \"OLED\" configuration node.",
+        "_mcu": {
+            "mcu": true
+        }
+    },
+    {
+        "id": "d15b1a0000000010",
+        "type": "inject",
+        "z": "d15b1a0000000001",
+        "name": "title",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.5,
+        "topic": "",
+        "payload": "Node-RED",
+        "payloadType": "str",
+        "x": 130,
+        "y": 80,
+        "wires": [
+            [
+                "d15b1a0000000020"
+            ]
+        ],
+        "_mcu": {
+            "mcu": true
+        }
+    },
+    {
+        "id": "d15b1a0000000020",
+        "type": "mcu-display",
+        "z": "d15b1a0000000001",
+        "name": "title (line 1, size 2)",
+        "display": "d15b1a00000000c1",
+        "line": 1,
+        "size": "2",
+        "align": "center",
+        "clear": "area",
+        "x": 360,
+        "y": 80,
+        "wires": [
+            []
+        ],
+        "_mcu": {
+            "mcu": true
+        }
+    },
+    {
+        "id": "d15b1a0000000011",
+        "type": "inject",
+        "z": "d15b1a0000000001",
+        "name": "every second",
+        "props": [],
+        "repeat": "1",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 1,
+        "topic": "",
+        "x": 150,
+        "y": 140,
+        "wires": [
+            [
+                "d15b1a0000000030"
+            ]
+        ],
+        "_mcu": {
+            "mcu": true
+        }
+    },
+    {
+        "id": "d15b1a0000000030",
+        "type": "function",
+        "z": "d15b1a0000000001",
+        "name": "count",
+        "func": "const count = (context.get(\"count\") || 0) + 1;\ncontext.set(\"count\", count);\nmsg.payload = \"count: \" + count;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 140,
+        "wires": [
+            [
+                "d15b1a0000000040"
+            ]
+        ],
+        "_mcu": {
+            "mcu": true
+        }
+    },
+    {
+        "id": "d15b1a0000000040",
+        "type": "mcu-display",
+        "z": "d15b1a0000000001",
+        "name": "count (line 3)",
+        "display": "d15b1a00000000c1",
+        "line": 3,
+        "size": "1",
+        "align": "left",
+        "clear": "area",
+        "x": 520,
+        "y": 140,
+        "wires": [
+            []
+        ],
+        "_mcu": {
+            "mcu": true
+        }
+    },
+    {
+        "id": "d15b1a0000000012",
+        "type": "inject",
+        "z": "d15b1a0000000001",
+        "name": "symbols",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "°±×←→↑↓●○■□♥★✓",
+        "payloadType": "str",
+        "x": 130,
+        "y": 200,
+        "wires": [
+            [
+                "d15b1a0000000050"
+            ]
+        ],
+        "_mcu": {
+            "mcu": true
+        }
+    },
+    {
+        "id": "d15b1a0000000050",
+        "type": "mcu-display",
+        "z": "d15b1a0000000001",
+        "name": "symbols (line 5)",
+        "display": "d15b1a00000000c1",
+        "line": 5,
+        "size": "1",
+        "align": "left",
+        "clear": "area",
+        "x": 350,
+        "y": 200,
+        "wires": [
+            []
+        ],
+        "_mcu": {
+            "mcu": true
+        }
+    },
+    {
+        "id": "d15b1a0000000013",
+        "type": "inject",
+        "z": "d15b1a0000000001",
+        "name": "temperature",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "[\"Temp\",{\"text\":\"23.5°C\",\"size\":2,\"align\":\"right\"}]",
+        "payloadType": "json",
+        "x": 140,
+        "y": 260,
+        "wires": [
+            [
+                "d15b1a0000000060"
+            ]
+        ],
+        "_mcu": {
+            "mcu": true
+        }
+    },
+    {
+        "id": "d15b1a0000000014",
+        "type": "inject",
+        "z": "d15b1a0000000001",
+        "name": "inverted",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"text\":\" ALERT \",\"line\":6,\"invert\":true}",
+        "payloadType": "json",
+        "x": 130,
+        "y": 320,
+        "wires": [
+            [
+                "d15b1a0000000060"
+            ]
+        ],
+        "_mcu": {
+            "mcu": true
+        }
+    },
+    {
+        "id": "d15b1a0000000060",
+        "type": "mcu-display",
+        "z": "d15b1a0000000001",
+        "name": "lines 6 - 8",
+        "display": "d15b1a00000000c1",
+        "line": 6,
+        "size": "1",
+        "align": "left",
+        "clear": "area",
+        "x": 340,
+        "y": 290,
+        "wires": [
+            []
+        ],
+        "_mcu": {
+            "mcu": true
+        }
+    },
+    {
+        "id": "d15b1a0000000015",
+        "type": "inject",
+        "z": "d15b1a0000000001",
+        "name": "clear screen",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"clear\":true}",
+        "payloadType": "json",
+        "x": 140,
+        "y": 380,
+        "wires": [
+            [
+                "d15b1a0000000020"
+            ]
+        ],
+        "_mcu": {
+            "mcu": true
+        }
+    },
+    {
+        "id": "d15b1a00000000c1",
+        "type": "mcu-display-config",
+        "name": "OLED",
+        "controller": "ssd1306",
+        "size": "128x64",
+        "address": "0x3C",
+        "sda": "",
+        "scl": "",
+        "hz": "400000",
+        "rotate": false
+    }
+]

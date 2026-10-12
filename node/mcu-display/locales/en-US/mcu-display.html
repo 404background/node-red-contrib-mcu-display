@@ -1,0 +1,33 @@
+<script type="text/html" data-help-name="mcu-display">
+    <p>Shows text and symbols on the OLED display of a <code>display config</code> node.</p>
+
+    <h3>Input</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">string | number | object | array</span></dt>
+        <dd>
+            <ul>
+                <li><b>string, number</b>: shown at the node's line, size and alignment. <code>\n</code> starts a new line; text longer than the screen width wraps.</li>
+                <li><b>object</b>: one item, its properties override the node's settings:
+                    <ul>
+                        <li><code>text</code> - the text</li>
+                        <li><code>line</code> (1 -) or <code>x</code>, <code>y</code> - position (pixels from the top left)</li>
+                        <li><code>size</code> (1 - 4), <code>align</code> (<code>"left"</code>, <code>"center"</code>, <code>"right"</code>)</li>
+                        <li><code>clear</code> - <code>"area"</code>, <code>"all"</code> or <code>"none"</code></li>
+                        <li><code>invert</code> - <code>true</code>: dark text on a light background</li>
+                        <li><code>wrap</code> - <code>false</code>: cut lines longer than the screen</li>
+                    </ul>
+                    Without <code>text</code>: <code>{ "clear": true }</code> clears the screen, <code>{ "contrast": 0 - 255 }</code> sets the brightness, <code>{ "power": false }</code> / <code>true</code> turns the panel off / on.
+                </li>
+                <li><b>array</b>: the items in order, shown at once. An item without <code>line</code> / <code>y</code> goes below the previous one, so <code>["Temp", "23.5°C"]</code> shows two lines.</li>
+            </ul>
+        </dd>
+    </dl>
+
+    <h3>Output</h3>
+    <p>The input message, after the display has been updated.</p>
+
+    <h3>Details</h3>
+    <p>A character is 6 x 8 pixels times the text size. Lines are 8 pixels high, so a size 2 text on line 1 uses lines 1 and 2.</p>
+    <p><b>Before drawing</b>: <i>Clear the lines of the text</i> lets several display nodes update their own lines of one screen. Sending an empty string clears the node's line.</p>
+    <p>Characters that are not in the font (for example Japanese) are shown as <code>?</code> with a warning.</p>
+</script>

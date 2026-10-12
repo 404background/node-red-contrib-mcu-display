@@ -1,0 +1,12 @@
+{
+    "modules": {
+        "display/font": "./font",
+        "display/screen": "./screen",
+        "display/ssd1306": "./ssd1306"
+    },
+    "preload": [
+        "display/font",
+        "display/screen",
+        "display/ssd1306"
+    ]
+}

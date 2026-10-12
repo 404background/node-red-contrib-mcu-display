@@ -1,0 +1,68 @@
+<script type="text/javascript">
+    RED.nodes.registerType("mcu-display", {
+        category: "MCU",
+        color: "#c7e9c0",
+        defaults: {
+            name: { value: "" },
+            display: { value: "", type: "mcu-display-config", required: true },
+            line: { value: 1, required: true, validate: function (v) {
+                return /^\d+$/.test(String(v)) && Number(v) >= 1 && Number(v) <= 8;
+            }},
+            size: { value: "1", required: true },
+            align: { value: "left", required: true },
+            clear: { value: "area", required: true }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "font-awesome/fa-television",
+        align: "right",
+        paletteLabel: "display",
+        label: function () {
+            return this.name || "display";
+        },
+        labelStyle: function () {
+            return this.name ? "node_label_italic" : "";
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="mcu-display">
+    <div class="form-row">
+        <label for="node-input-display"><i class="fa fa-television"></i> <span data-i18n="mcu-display.label.display"></span></label>
+        <input type="text" id="node-input-display">
+    </div>
+    <div class="form-row">
+        <label for="node-input-line"><i class="fa fa-list-ol"></i> <span data-i18n="mcu-display.label.line"></span></label>
+        <input type="number" id="node-input-line" min="1" max="8" style="width: 80px;">
+    </div>
+    <div class="form-row">
+        <label for="node-input-size"><i class="fa fa-text-height"></i> <span data-i18n="mcu-display.label.size"></span></label>
+        <select id="node-input-size" style="width: 240px;">
+            <option value="1" data-i18n="mcu-display.size.1"></option>
+            <option value="2" data-i18n="mcu-display.size.2"></option>
+            <option value="3" data-i18n="mcu-display.size.3"></option>
+            <option value="4" data-i18n="mcu-display.size.4"></option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-align"><i class="fa fa-align-left"></i> <span data-i18n="mcu-display.label.align"></span></label>
+        <select id="node-input-align" style="width: 240px;">
+            <option value="left" data-i18n="mcu-display.align.left"></option>
+            <option value="center" data-i18n="mcu-display.align.center"></option>
+            <option value="right" data-i18n="mcu-display.align.right"></option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-clear"><i class="fa fa-eraser"></i> <span data-i18n="mcu-display.label.clear"></span></label>
+        <select id="node-input-clear" style="width: 240px;">
+            <option value="area" data-i18n="mcu-display.clear.area"></option>
+            <option value="all" data-i18n="mcu-display.clear.all"></option>
+            <option value="none" data-i18n="mcu-display.clear.none"></option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="mcu-display.label.name"></span></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]mcu-display.label.name">
+    </div>
+    <div class="form-tips" data-i18n="[html]mcu-display.tip"></div>
+</script>

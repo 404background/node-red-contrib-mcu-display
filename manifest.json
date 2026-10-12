@@ -1,0 +1,13 @@
+{
+    "include": [
+        "./native/manifest.json"
+    ],
+    "modules": {
+        "mcu-display-config_mcu": "./node/mcu-display-config/mcu-display-config_mcu",
+        "mcu-display_mcu": "./node/mcu-display/mcu-display_mcu"
+    },
+    "preload": [
+        "mcu-display-config_mcu",
+        "mcu-display_mcu"
+    ]
+}
