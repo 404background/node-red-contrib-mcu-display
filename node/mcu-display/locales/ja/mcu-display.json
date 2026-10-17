@@ -6,7 +6,15 @@
             "size": "文字サイズ",
             "align": "配置",
             "clear": "描画の前に",
-            "name": "名前"
+            "name": "名前",
+            "format": "表示形式"
+        },
+        "format": {
+            "text": "文字列",
+            "time": "時刻（HH:MM:SS）",
+            "hm": "時刻（HH:MM）",
+            "date": "日付（YYYY-MM-DD）",
+            "datetime": "日付と時刻"
         },
         "size": {
             "1": "1（21 文字 x 8 行）",

@@ -54,7 +54,8 @@
         ],
         "_mcu": {
             "mcu": true
-        }
+        },
+        "format": "text"
     },
     {
         "id": "d15b1a0000000011",
@@ -118,6 +119,55 @@
         ],
         "_mcu": {
             "mcu": true
+        },
+        "format": "text"
+    },
+    {
+        "id": "d15b1a0000000016",
+        "type": "inject",
+        "z": "d15b1a0000000001",
+        "name": "clock",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 200,
+        "wires": [
+            [
+                "d15b1a0000000070"
+            ]
+        ],
+        "_mcu": {
+            "mcu": true
+        }
+    },
+    {
+        "id": "d15b1a0000000070",
+        "type": "mcu-display",
+        "z": "d15b1a0000000001",
+        "name": "time (line 4)",
+        "display": "d15b1a00000000c1",
+        "line": 4,
+        "size": "1",
+        "align": "right",
+        "clear": "area",
+        "format": "time",
+        "x": 340,
+        "y": 200,
+        "wires": [
+            []
+        ],
+        "_mcu": {
+            "mcu": true
         }
     },
     {
@@ -138,7 +188,7 @@
         "payload": "°±×←→↑↓●○■□♥★✓",
         "payloadType": "str",
         "x": 130,
-        "y": 200,
+        "y": 260,
         "wires": [
             [
                 "d15b1a0000000050"
@@ -159,13 +209,14 @@
         "align": "left",
         "clear": "area",
         "x": 350,
-        "y": 200,
+        "y": 260,
         "wires": [
             []
         ],
         "_mcu": {
             "mcu": true
-        }
+        },
+        "format": "text"
     },
     {
         "id": "d15b1a0000000013",
@@ -185,7 +236,7 @@
         "payload": "[\"Temp\",{\"text\":\"23.5°C\",\"size\":2,\"align\":\"right\"}]",
         "payloadType": "json",
         "x": 140,
-        "y": 260,
+        "y": 320,
         "wires": [
             [
                 "d15b1a0000000060"
@@ -213,7 +264,7 @@
         "payload": "{\"text\":\" ALERT \",\"line\":6,\"invert\":true}",
         "payloadType": "json",
         "x": 130,
-        "y": 320,
+        "y": 380,
         "wires": [
             [
                 "d15b1a0000000060"
@@ -234,13 +285,14 @@
         "align": "left",
         "clear": "area",
         "x": 340,
-        "y": 290,
+        "y": 350,
         "wires": [
             []
         ],
         "_mcu": {
             "mcu": true
-        }
+        },
+        "format": "text"
     },
     {
         "id": "d15b1a0000000015",
@@ -260,7 +312,7 @@
         "payload": "{\"clear\":true}",
         "payloadType": "json",
         "x": 140,
-        "y": 380,
+        "y": 440,
         "wires": [
             [
                 "d15b1a0000000020"

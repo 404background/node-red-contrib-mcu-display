@@ -6,7 +6,15 @@
             "size": "Text size",
             "align": "Align",
             "clear": "Before drawing",
-            "name": "Name"
+            "name": "Name",
+            "format": "Format"
+        },
+        "format": {
+            "text": "Text",
+            "time": "Time (HH:MM:SS)",
+            "hm": "Time (HH:MM)",
+            "date": "Date (YYYY-MM-DD)",
+            "datetime": "Date and time"
         },
         "size": {
             "1": "1 (21 characters x 8 lines)",

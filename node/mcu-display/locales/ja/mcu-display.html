@@ -3,10 +3,10 @@
 
     <h3>入力</h3>
     <dl class="message-properties">
-        <dt>payload <span class="property-type">文字列 | 数値 | オブジェクト | 配列</span></dt>
+        <dt>payload <span class="property-type">文字列 | 数値 | Date | オブジェクト | 配列</span></dt>
         <dd>
             <ul>
-                <li><b>文字列・数値</b>：ノードで設定した行・サイズ・配置で表示します。<code>\n</code> で改行し、画面の幅より長い行は折り返します。</li>
+                <li><b>文字列・数値</b>：ノードで設定した行・サイズ・配置で表示します。<code>\n</code> で改行し、画面の幅より長い行は折り返します。<b>表示形式</b>（下記）に従って表示します。</li>
                 <li><b>オブジェクト</b>：1 つの項目。プロパティがノードの設定より優先されます：
                     <ul>
                         <li><code>text</code> - 表示する文字列</li>
@@ -15,6 +15,7 @@
                         <li><code>clear</code> - <code>"area"</code>、<code>"all"</code>、<code>"none"</code></li>
                         <li><code>invert</code> - <code>true</code> で白地に黒文字</li>
                         <li><code>wrap</code> - <code>false</code> で画面より長い行を切り捨て</li>
+                        <li><code>format</code> - <code>"text"</code>、<code>"time"</code>、<code>"hm"</code>、<code>"date"</code>、<code>"datetime"</code></li>
                     </ul>
                     <code>text</code> がないとき：<code>{ "clear": true }</code> で画面を消去、<code>{ "contrast": 0～255 }</code> で明るさ、<code>{ "power": false }</code> / <code>true</code> で表示のオフ / オン。
                 </li>
@@ -29,5 +30,7 @@
     <h3>詳細</h3>
     <p>1 文字は 6 x 8 ピクセルに文字サイズを掛けた大きさです。1 行は 8 ピクセルなので、サイズ 2 の文字を 1 行目に書くと 1・2 行目を使います。</p>
     <p><b>描画の前に</b>：<i>文字を書く行を消す</i> にしておくと、1 つの画面の別々の行を複数の display ノードで更新できます。空の文字列を送るとそのノードの行を消します。</p>
+    <p><b>表示形式</b>：<i>文字列</i> は文字列・数値をそのまま、<code>Date</code> を <code>YYYY-MM-DD HH:MM:SS</code> で表示します。<i>時刻（HH:MM:SS）</i>、<i>時刻（HH:MM）</i>、<i>日付（YYYY-MM-DD）</i>、<i>日付と時刻</i> は、<code>Date</code>、1970 年からのミリ秒（inject ノードの <i>タイムスタンプ</i>）、日付の文字列を変換します。日付でない値はそのまま表示します。</p>
+    <p>時刻はデバイスのローカル時刻です。デバイスの時計は Wi-Fi（SNTP）または xsbug でのデバッグ時に合わせられます。どちらもないときは 1970-01-01 00:00:00 から始まります。</p>
     <p>フォントにない文字（日本語など）は <code>?</code> で表示し、警告を出します。</p>
 </script>

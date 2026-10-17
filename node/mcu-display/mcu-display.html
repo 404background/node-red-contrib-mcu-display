@@ -10,7 +10,8 @@
             }},
             size: { value: "1", required: true },
             align: { value: "left", required: true },
-            clear: { value: "area", required: true }
+            clear: { value: "area", required: true },
+            format: { value: "text" }
         },
         inputs: 1,
         outputs: 1,
@@ -34,6 +35,16 @@
     <div class="form-row">
         <label for="node-input-line"><i class="fa fa-list-ol"></i> <span data-i18n="mcu-display.label.line"></span></label>
         <input type="number" id="node-input-line" min="1" max="8" style="width: 80px;">
+    </div>
+    <div class="form-row">
+        <label for="node-input-format"><i class="fa fa-clock-o"></i> <span data-i18n="mcu-display.label.format"></span></label>
+        <select id="node-input-format" style="width: 240px;">
+            <option value="text" data-i18n="mcu-display.format.text"></option>
+            <option value="time" data-i18n="mcu-display.format.time"></option>
+            <option value="hm" data-i18n="mcu-display.format.hm"></option>
+            <option value="date" data-i18n="mcu-display.format.date"></option>
+            <option value="datetime" data-i18n="mcu-display.format.datetime"></option>
+        </select>
     </div>
     <div class="form-row">
         <label for="node-input-size"><i class="fa fa-text-height"></i> <span data-i18n="mcu-display.label.size"></span></label>

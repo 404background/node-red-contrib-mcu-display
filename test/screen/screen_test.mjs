@@ -1,5 +1,5 @@
 /*
- * Runs the MCU modules (native/font.js, native/screen.js, native/ssd1306.js)
+ * Runs the MCU modules (native/font.js, native/format.js, native/screen.js, native/ssd1306.js)
  * on Node.js with a mock I2C bus: npm test
  *   --show  prints the test screens as text
  */
@@ -12,7 +12,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 /* The modules import each other by their manifest names: copy them with file imports */
 const native = fileURLToPath(new URL("../../native/", import.meta.url));
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), "mcu-display-"));
-for (const name of ["font", "screen", "ssd1306"]) {
+for (const name of ["font", "format", "screen", "ssd1306"]) {
     const source = fs.readFileSync(path.join(native, `${name}.js`), "utf8")
         .replace(/from "display\/(\w+)"/g, (_, module) => `from "./${module}.mjs"`);
     fs.writeFileSync(path.join(dir, `${name}.mjs`), source);
@@ -21,6 +21,7 @@ const load = (name) => import(pathToFileURL(path.join(dir, `${name}.mjs`)).href)
 const { glyph, symbols } = await load("font");
 const { default: Screen } = await load("screen");
 const { default: SSD1306 } = await load("ssd1306");
+const { format } = await load("format");
 const show = process.argv.includes("--show");
 
 function text(screen) {
@@ -197,5 +198,21 @@ const missing = new SSD1306({ ...options, io: Nack });
 assert.throws(() => missing.open(), /I2C write failed/);
 assert.equal(missing.opened, false, "closed after a failed open");
 
+/* format: text, dates and times in local time */
+const when = new Date(2026, 9, 17, 9, 5, 7);
+assert.equal(format("Hello"), "Hello");
+assert.equal(format(23.5), "23.5");
+assert.equal(format(true), "true");
+assert.equal(format(undefined), "");
+assert.equal(format(when.getTime()), String(when.getTime()), "a number stays a number in text");
+assert.equal(format(when), "2026-10-17 09:05:07", "a Date in text");
+assert.equal(format(when.getTime(), "time"), "09:05:07", "inject timestamp");
+assert.equal(format(String(when.getTime()), "time"), "09:05:07", "timestamp as a string");
+assert.equal(format(when, "hm"), "09:05");
+assert.equal(format(when, "date"), "2026-10-17");
+assert.equal(format(when.toISOString(), "datetime"), "2026-10-17 09:05:07", "ISO string");
+assert.equal(format("not a date", "time"), "not a date", "invalid dates as they are");
+assert.equal(format(when, "unknown"), "2026-10-17 09:05:07");
+
 fs.rmSync(dir, { recursive: true, force: true });
-console.log("font / screen / ssd1306: all tests passed");
+console.log("font / format / screen / ssd1306: all tests passed");

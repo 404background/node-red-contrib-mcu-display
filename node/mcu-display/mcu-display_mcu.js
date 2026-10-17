@@ -2,8 +2,9 @@
  * mcu-display - MCU runtime
  *
  * Shows msg.payload on the display of its mcu-display-config node.
- *   string / number / boolean  text at the node's line, size and alignment
- *   { text, line, x, y, size, align, clear, invert }  one item; omitted
+ *   string / number / boolean / Date  text at the node's line, size and
+ *       alignment, formatted by the node's format (display/format)
+ *   { text, line, x, y, size, align, clear, invert, format }  one item; omitted
  *       properties come from the node
  *   { clear: true }            clears the screen
  *   { contrast: 0 - 255 }, { power: false }  panel settings
@@ -13,6 +14,7 @@
  */
 
 import { Node } from "nodered";
+import format, { FORMATS } from "display/format";
 
 const CLEAR = Object.freeze(["area", "all", "none"]);
 const STATUS_LENGTH = 20;
@@ -28,7 +30,8 @@ class DisplayNode extends Node {
             line: Math.max(1, Math.floor(Number(config.line)) || 1),
             size: Math.max(1, Math.min(4, Math.floor(Number(config.size)) || 1)),
             align: config.align || "left",
-            clear: CLEAR.includes(config.clear) ? config.clear : "area"
+            clear: CLEAR.includes(config.clear) ? config.clear : "area",
+            format: FORMATS.includes(config.format) ? config.format : "text"
         };
 
         const display = RED.nodes.getNode(config.display);
@@ -80,8 +83,8 @@ class DisplayNode extends Node {
      */
     #item(screen, panel, item, y) {
         const options = this.#options;
-        if ((null === item) || ("object" !== typeof item)) {
-            const result = screen.print((undefined === item) ? "" : String(item), {
+        if ((null === item) || ("object" !== typeof item) || (item instanceof Date)) {
+            const result = screen.print(format(item, options.format), {
                 y,
                 size: options.size,
                 align: options.align,
@@ -105,7 +108,7 @@ class DisplayNode extends Node {
             y = Math.floor(Number(item.y)) || 0;
         else if (undefined !== item.line)
             y = (Math.max(1, Math.floor(Number(item.line)) || 1) - 1) * 8;
-        const result = screen.print(String(item.text), {
+        const result = screen.print(format(item.text, item.format ?? options.format), {
             x: item.x,
             y,
             size: item.size ?? options.size,

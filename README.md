@@ -1,11 +1,11 @@
 # node-red-contrib-mcu-display
 
 OLED display nodes for [Node-RED MCU Edition](https://github.com/phoddie/node-red-mcu).
-Shows text and symbols from the flow on an **SSD1306** or **SSD1315** OLED display connected over **I2C** (the common 0.96 inch 128 x 64 and 0.91 inch 128 x 32 modules).
+Shows text and symbols from the flow on an **SSD1306** or **SSD1315** OLED display connected over **I2C**: SSD1306 modules are usually 0.96 inch 128 x 64 or 0.91 inch 128 x 32, SSD1315 modules usually 0.96 inch 128 x 64.
 
 日本語: [docs/ja/README.md](docs/ja/README.md)
 
-Status: tested in the Moddable simulator with an emulated display and built for ESP32 / XIAO ESP32S3 with Moddable SDK 7.2.1 / ESP-IDF 5.5.1. Not tested on hardware yet.
+Status: tested in the Moddable simulator with an emulated display and built for ESP32 / XIAO ESP32S3 / XIAO ESP32C3 with Moddable SDK 7.2.1 / ESP-IDF 5.5.1. Not tested on hardware yet.
 
 ## Install
 
@@ -13,6 +13,13 @@ Status: tested in the Moddable simulator with an emulated display and built for 
 cd ~/.node-red
 npm install @background404/node-red-contrib-mcu-display
 ```
+
+## OLED modules
+
+Examples of OLED modules (Amazon):
+
+- https://link.amazon/B02OXPvgX
+- https://link.amazon/B0brU5Ri3
 
 ## Wiring
 
@@ -37,9 +44,11 @@ Most modules use the I2C address `0x3C` (`0x3D` when the address jumper is chang
 | `"Hello"`, `23.5` | Shown at the node's line, size and alignment. `\n` starts a new line; long lines wrap |
 | `{ "text": "23.5°C", "line": 3, "size": 2, "align": "right" }` | One item; its properties override the node's settings (`x`, `y` in pixels, `invert`, `clear`, `wrap` too) |
 | `["Temp", { "text": "23.5°C", "size": 2 }]` | Items in order; an item without `line` / `y` goes below the previous one |
+| `1760000000000` (inject *timestamp*), a `Date` | With the format *Time (HH:MM:SS)*: `09:05:07`. Also *Time (HH:MM)*, *Date (YYYY-MM-DD)*, *Date and time*; a `Date` in *Text* shows date and time |
 | `{ "clear": true }` | Clears the screen |
 | `{ "contrast": 128 }`, `{ "power": false }` | Brightness (0 - 255), display off / on |
 
+- Times are in the device's local time. The clock is set over Wi-Fi (SNTP) or by xsbug when debugging; without them it starts at 1970-01-01.
 - A line is 8 pixels high: lines 1 - 8 on 128 x 64, 1 - 4 on 128 x 32. A character is 6 x 8 pixels times the text size (size 1: 21 characters per line).
 - **Before drawing**: *Clear the lines of the text* (default) only erases the lines the text uses, so several display nodes can update their own lines of one screen. *Clear the screen* and *Draw over the screen* are the other choices.
 - Characters: ASCII and `° ± × ÷ µ ¥ ← → ↑ ↓ ● ○ ■ □ ▲ ▼ ♥ ★ ♪ ✓ … █`. Other characters (for example Japanese) are shown as `?` with a warning.
@@ -47,7 +56,7 @@ Most modules use the I2C address `0x3C` (`0x3D` when the address jumper is chang
 
 ## Example
 
-`examples/display.json` (Import > Examples > @background404/node-red-contrib-mcu-display): a title in size 2, a counter updated every second, symbols, a mixed-size temperature, inverted text and clearing the screen.
+`examples/display.json` (Import > Examples > @background404/node-red-contrib-mcu-display): a title in size 2, a counter updated every second, a clock (inject timestamp shown as HH:MM:SS), symbols, a mixed-size temperature, inverted text and clearing the screen.
 
 ## How It Works
 
