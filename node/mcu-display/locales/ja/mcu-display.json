@@ -31,6 +31,7 @@
         "overflow": {
             "wrap": "折り返す",
             "scroll": "横にスクロール",
+            "scrollup": "折り返して上にスクロール",
             "cut": "切り捨てる"
         },
         "clear": {

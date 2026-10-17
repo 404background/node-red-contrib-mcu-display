@@ -131,6 +131,28 @@ screen.takeDirty();
 screen.print(ticker, { y: 24, scroll: 2 });
 assert.equal(screen.takeDirty(), 1 << 3, "a scroll step changes only its own page");
 
+/* scrollUp: wrapped text taller than the space to the bottom moves up and repeats */
+const story = "line1\nline2\nline3\nline4\nline5";
+screen = new Screen(128, 32);
+result = screen.print(story, { y: 8, scrollUp: 0 });
+assert.equal(result.overflow, true);
+assert.equal(result.height, 40);
+const upStart = rows(screen, 8, 32);
+const reference = new Screen(128, 64);
+reference.print(story, { y: 8 });
+assert.deepEqual(upStart, rows(reference, 8, 32), "starts like plain text, cut at the bottom");
+screen.print(story, { y: 8, scrollUp: 8 });
+reference.print(story, { y: 0, clear: "all" });
+assert.deepEqual(rows(screen, 8, 32), rows(reference, 8, 32), "8 pixels later line 2 is at the top");
+assert.ok(rows(screen, 0, 8).every(row => !row.includes("#")), "clipped to y");
+screen.print(story, { y: 8, scrollUp: 48 });
+assert.deepEqual(rows(screen, 8, 32), upStart, "repeats after the text and a blank line");
+assert.equal(new Screen(128, 64).print("short", { y: 8, scrollUp: 5 }).overflow, false, "text that fits does not scroll");
+screen = new Screen(128, 64);
+result = screen.print("abcdefghijklmnopqrstuvwxyz".repeat(3), { y: 48, scrollUp: 0 });
+assert.equal(result.lines.length, 4, "wraps before scrolling up");
+assert.equal(result.overflow, true);
+
 /* characters not in the font */
 result = screen.print("Aあ°C");
 assert.equal(result.skipped, "あ");

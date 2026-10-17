@@ -14,7 +14,7 @@
                         <li><code>size</code> (1 - 4), <code>align</code> (<code>"left"</code>, <code>"center"</code>, <code>"right"</code>)</li>
                         <li><code>clear</code> - <code>"area"</code>, <code>"all"</code> or <code>"none"</code></li>
                         <li><code>invert</code> - <code>true</code>: dark text on a light background</li>
-                        <li><code>overflow</code> - lines longer than the screen: <code>"wrap"</code>, <code>"scroll"</code> or <code>"cut"</code> (<code>wrap: false</code> also cuts)</li>
+                        <li><code>overflow</code> - lines longer than the screen: <code>"wrap"</code>, <code>"scroll"</code>, <code>"scrollup"</code> or <code>"cut"</code> (<code>wrap: false</code> also cuts)</li>
                         <li><code>format</code> - <code>"text"</code>, <code>"time"</code>, <code>"hm"</code>, <code>"date"</code> or <code>"datetime"</code></li>
                     </ul>
                     Without <code>text</code>: <code>{ "clear": true }</code> clears the screen, <code>{ "contrast": 0 - 255 }</code> sets the brightness, <code>{ "power": false }</code> / <code>true</code> turns the panel off / on.
@@ -30,7 +30,7 @@
     <h3>Details</h3>
     <p>A character is 6 x 8 pixels times the text size. Lines are 8 pixels high, so a size 2 text on line 1 uses lines 1 and 2.</p>
     <p><b>Before drawing</b>: <i>Clear the lines of the text</i> lets several display nodes update their own lines of one screen. Sending an empty string clears the node's line.</p>
-    <p><b>Long lines</b>: <i>Scroll sideways</i> moves a line that does not fit from right to left, about 40 pixels a second, and starts it again after a short gap. Lines that fit stay still. Scrolling stops when the node gets its next message.</p>
+    <p><b>Long lines</b>: <i>Scroll sideways</i> moves a line that does not fit from right to left, about 40 pixels a second, and starts it again after a short gap. Lines that fit stay still. <i>Wrap and scroll up</i> wraps the text and, when it is taller than the space from the node's line to the bottom of the screen, moves it up about 20 pixels a second and starts it again after a blank line; it uses the screen from its line to the bottom. Scrolling stops when the node gets its next message.</p>
     <p><b>Format</b>: <i>Text</i> shows strings and numbers as they are and a <code>Date</code> as <code>YYYY-MM-DD HH:MM:SS</code>. <i>Time (HH:MM:SS)</i>, <i>Time (HH:MM)</i>, <i>Date (YYYY-MM-DD)</i> and <i>Date and time</i> take a <code>Date</code>, milliseconds since 1970 (the inject node's <i>timestamp</i>) or a date string. A value that is not a date is shown as it is.</p>
     <p>Times are in the device's local time. The device's clock is set over Wi-Fi (SNTP) or by xsbug when debugging; without them it starts at 1970-01-01 00:00:00.</p>
     <p>Characters that are not in the font (for example Japanese) are shown as <code>?</code> with a warning.</p>

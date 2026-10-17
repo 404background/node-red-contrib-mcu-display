@@ -45,7 +45,7 @@ Most modules use the I2C address `0x3C` (`0x3D` when the address jumper is chang
 | `{ "text": "23.5°C", "line": 3, "size": 2, "align": "right" }` | One item; its properties override the node's settings (`x`, `y` in pixels, `invert`, `clear`, `wrap` too) |
 | `["Temp", { "text": "23.5°C", "size": 2 }]` | Items in order; an item without `line` / `y` goes below the previous one |
 | `1760000000000` (inject *timestamp*), a `Date` | With the format *Time (HH:MM:SS)*: `09:05:07`. Also *Time (HH:MM)*, *Date (YYYY-MM-DD)*, *Date and time*; a `Date` in *Text* shows date and time |
-| `"Node-RED MCU on XIAO ESP32C3: ..."` with *Long lines* set to *Scroll sideways* | A line longer than the screen scrolls from right to left until the next message (`{ "text": "...", "overflow": "scroll" }` for one item) |
+| `"Node-RED MCU on XIAO ESP32C3: ..."` with *Long lines* set to *Scroll sideways* | A line longer than the screen scrolls from right to left until the next message (`{ "text": "...", "overflow": "scroll" }` for one item). *Wrap and scroll up* (`"scrollup"`) wraps the text and scrolls it up when it does not fit between its line and the bottom of the screen |
 | `{ "clear": true }` | Clears the screen |
 | `{ "contrast": 128 }`, `{ "power": false }` | Brightness (0 - 255), display off / on |
 

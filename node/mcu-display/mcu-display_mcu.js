@@ -10,9 +10,10 @@
  *   { contrast: 0 - 255 }, { power: false }  panel settings
  *   an array of these          drawn in order, sent to the panel once; an
  *       item without line / y goes below the previous one
- * Text longer than the screen width wraps, is cut or scrolls sideways
- * (overflow: "wrap" | "cut" | "scroll"); scrolling lines are redrawn by a
- * timer until the next message.
+ * Text longer than the screen width wraps, is cut, scrolls sideways or
+ * wraps and scrolls up when it is taller than the space to the bottom of
+ * the screen (overflow: "wrap" | "cut" | "scroll" | "scrollup"); scrolling
+ * text is redrawn by a timer until the next message.
  * The message is sent on after the display has been updated.
  */
 
@@ -21,10 +22,11 @@ import Timer from "timer";
 import format, { FORMATS } from "display/format";
 
 const CLEAR = Object.freeze(["area", "all", "none"]);
-const OVERFLOW = Object.freeze(["wrap", "cut", "scroll"]);
+const OVERFLOW = Object.freeze(["wrap", "cut", "scroll", "scrollup"]);
 const STATUS_LENGTH = 20;
 const SCROLL_INTERVAL = 50;     // ms per scroll step
-const SCROLL_STEP = 2;          // pixels per step (times the text size)
+const SCROLL_STEP = 2;          // pixels per step sideways (times the text size)
+const SCROLL_UP_STEP = 1;       // pixels per step up (times the text size)
 
 class DisplayNode extends Node {
     #display;
@@ -101,7 +103,10 @@ class DisplayNode extends Node {
     #scroll() {
         const error = this.#display.draw(screen => {
             for (const item of this.#scrolling) {
-                item.options.scroll += SCROLL_STEP * item.options.size;
+                if (undefined !== item.options.scrollUp)
+                    item.options.scrollUp += SCROLL_UP_STEP * item.options.size;
+                else
+                    item.options.scroll += SCROLL_STEP * item.options.size;
                 screen.print(item.text, item.options);
             }
         });
@@ -117,6 +122,8 @@ class DisplayNode extends Node {
             options.wrap = false;
         else if ("scroll" === overflow)
             options.scroll = 0;
+        else if ("scrollup" === overflow)
+            options.scrollUp = 0;
         const result = screen.print(text, options);
         if (result.overflow) {
             /* later steps redraw only the item's own lines */
