@@ -11,12 +11,14 @@ import { glyph, CELL_WIDTH, CELL_HEIGHT, GLYPH_WIDTH, GLYPH_HEIGHT } from "displ
 
 const MAX_SIZE = 4;
 const ALIGNS = Object.freeze(["left", "center", "right"]);
+const SCROLL_GAP = 4;     // blank characters between the end and the start of a scrolling line
 
 class Screen {
     #width;
     #height;
     #buffer;
     #dirty = 0;     // bit n: page n changed
+    #left = 0;      // drawing is clipped to x >= #left
 
     constructor(width, height) {
         this.#width = width;
@@ -62,7 +64,7 @@ class Screen {
 
     /* Sets (on) or clears the rectangle, clipped to the screen */
     fill(x, y, width, height, on) {
-        const x0 = Math.max(0, Math.floor(x)), x1 = Math.min(this.#width, Math.floor(x + width));
+        const x0 = Math.max(this.#left, Math.floor(x)), x1 = Math.min(this.#width, Math.floor(x + width));
         const y0 = Math.max(0, Math.floor(y)), y1 = Math.min(this.#height, Math.floor(y + height));
         if ((x0 >= x1) || (y0 >= y1))
             return;
@@ -114,10 +116,14 @@ class Screen {
      *            "all": clears the screen first, "none": draws over
      *   invert   true: light background, dark text
      *   wrap     false: lines longer than the screen are cut (default true)
+     *   scroll   pixels scrolled: lines longer than the screen are not wrapped
+     *            but drawn as a ticker moved left by scroll pixels, repeating
+     *            after a gap; overflow is true when there is such a line
      * "\n" starts a new line. Characters without a glyph are drawn as "?"
      * and returned in skipped.
      */
     print(text, options = {}) {
+        const scroll = (undefined === options.scroll) ? undefined : Math.max(0, Math.floor(Number(options.scroll)) || 0);
         const size = Math.min(MAX_SIZE, Math.max(1, Math.floor(Number(options.size)) || 1));
         const x = Math.max(0, Math.floor(Number(options.x)) || 0);
         const y = Math.floor(Number(options.y)) || 0;
@@ -128,8 +134,8 @@ class Screen {
         const lines = [];
         for (const line of String(text ?? "").replace(/\r\n?/g, "\n").split("\n")) {
             const chars = Array.from(line);
-            if (options.wrap === false || chars.length <= columns) {
-                lines.push(chars.slice(0, columns));
+            if ((undefined !== scroll) || options.wrap === false || chars.length <= columns) {
+                lines.push((undefined !== scroll) ? chars : chars.slice(0, columns));
                 continue;
             }
             for (let i = 0; i < chars.length; i += columns)
@@ -144,21 +150,46 @@ class Screen {
             this.fill(x, y, this.#width - x, height, !!options.invert);
 
         const skipped = [];
-        lines.forEach((chars, i) => {
-            const textWidth = chars.length * cellWidth - size;
-            let left = x;
-            if ("center" === align)
-                left = x + Math.floor((this.#width - x - textWidth) / 2);
-            else if ("right" === align)
-                left = this.#width - textWidth;
-            chars.forEach((char, j) => {
-                if (!this.#char(char, left + j * cellWidth, y + i * cellHeight, size, !options.invert)) {
-                    skipped.push(char);
-                    this.#char("?", left + j * cellWidth, y + i * cellHeight, size, !options.invert);
+        let overflow = false;
+        this.#left = x;
+        try {
+            lines.forEach((chars, i) => {
+                const textWidth = chars.length * cellWidth - size;
+                const top = y + i * cellHeight;
+                if ((undefined !== scroll) && (textWidth > this.#width - x)) {
+                    overflow = true;
+                    const period = (chars.length + SCROLL_GAP) * cellWidth;
+                    for (let left = x - (scroll % period); left < this.#width; left += period)
+                        this.#chars(chars, left, top, size, options.invert, skipped);
+                    return;
                 }
+                let left = x;
+                if ("center" === align)
+                    left = x + Math.floor((this.#width - x - textWidth) / 2);
+                else if ("right" === align)
+                    left = this.#width - textWidth;
+                this.#chars(chars, left, top, size, options.invert, skipped);
             });
+        }
+        finally {
+            this.#left = 0;
+        }
+        return { lines: lines.map(chars => chars.join("")), height, skipped: skipped.join(""), overflow };
+    }
+
+    /* Draws chars from left; characters off the screen are skipped */
+    #chars(chars, left, top, size, invert, skipped) {
+        const cellWidth = CELL_WIDTH * size;
+        chars.forEach((char, j) => {
+            const x = left + j * cellWidth;
+            if ((x + cellWidth <= this.#left) || (x >= this.#width))
+                return;
+            if (!this.#char(char, x, top, size, !invert)) {
+                if (!skipped.includes(char))
+                    skipped.push(char);
+                this.#char("?", x, top, size, !invert);
+            }
         });
-        return { lines: lines.map(chars => chars.join("")), height, skipped: skipped.join("") };
     }
 }
 

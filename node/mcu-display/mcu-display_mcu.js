@@ -10,18 +10,27 @@
  *   { contrast: 0 - 255 }, { power: false }  panel settings
  *   an array of these          drawn in order, sent to the panel once; an
  *       item without line / y goes below the previous one
+ * Text longer than the screen width wraps, is cut or scrolls sideways
+ * (overflow: "wrap" | "cut" | "scroll"); scrolling lines are redrawn by a
+ * timer until the next message.
  * The message is sent on after the display has been updated.
  */
 
 import { Node } from "nodered";
+import Timer from "timer";
 import format, { FORMATS } from "display/format";
 
 const CLEAR = Object.freeze(["area", "all", "none"]);
+const OVERFLOW = Object.freeze(["wrap", "cut", "scroll"]);
 const STATUS_LENGTH = 20;
+const SCROLL_INTERVAL = 50;     // ms per scroll step
+const SCROLL_STEP = 2;          // pixels per step (times the text size)
 
 class DisplayNode extends Node {
     #display;
     #options;
+    #scrolling = [];    // { text, options } of items with lines that scroll
+    #timer;
 
     onStart(config) {
         super.onStart(config);
@@ -31,7 +40,8 @@ class DisplayNode extends Node {
             size: Math.max(1, Math.min(4, Math.floor(Number(config.size)) || 1)),
             align: config.align || "left",
             clear: CLEAR.includes(config.clear) ? config.clear : "area",
-            format: FORMATS.includes(config.format) ? config.format : "text"
+            format: FORMATS.includes(config.format) ? config.format : "text",
+            overflow: OVERFLOW.includes(config.overflow) ? config.overflow : "wrap"
         };
 
         const display = RED.nodes.getNode(config.display);
@@ -52,6 +62,7 @@ class DisplayNode extends Node {
         const payload = msg.payload;
         const items = Array.isArray(payload) ? payload : [payload];
         let shown, skipped = "";
+        this.#stopScrolling();
         const error = this.#display.draw((screen, panel) => {
             let y = (this.#options.line - 1) * 8;
             for (const item of items) {
@@ -69,12 +80,50 @@ class DisplayNode extends Node {
             done?.(error);
             return;
         }
+        if (this.#scrolling.length)
+            this.#timer = Timer.repeat(() => this.#scroll(), SCROLL_INTERVAL);
         if (skipped)
             this.warn(`not in the font (shown as ?): ${skipped}`);
         if (undefined !== shown)
             this.status({ fill: "green", shape: "dot", text: (shown.length > STATUS_LENGTH) ? shown.slice(0, STATUS_LENGTH - 1) + "…" : shown });
         this.send(msg);
         done?.();
+    }
+
+    #stopScrolling() {
+        if (this.#timer)
+            Timer.clear(this.#timer);
+        this.#timer = undefined;
+        this.#scrolling = [];
+    }
+
+    /* Moves the scrolling lines one step; stops when the display is lost */
+    #scroll() {
+        const error = this.#display.draw(screen => {
+            for (const item of this.#scrolling) {
+                item.options.scroll += SCROLL_STEP * item.options.size;
+                screen.print(item.text, item.options);
+            }
+        });
+        if (error) {
+            this.#stopScrolling();
+            this.status({ fill: "red", shape: "ring", text: error });
+        }
+    }
+
+    /* Prints text, remembering it for the timer when a line scrolls */
+    #print(screen, text, options, overflow) {
+        if ("cut" === overflow)
+            options.wrap = false;
+        else if ("scroll" === overflow)
+            options.scroll = 0;
+        const result = screen.print(text, options);
+        if (result.overflow) {
+            /* later steps redraw only the item's own lines */
+            const size = Math.max(1, Math.min(4, Math.floor(Number(options.size)) || 1));
+            this.#scrolling.push({ text, options: { ...options, size, clear: "area" } });
+        }
+        return { ...result, y: options.y };
     }
 
     /*
@@ -84,13 +133,12 @@ class DisplayNode extends Node {
     #item(screen, panel, item, y) {
         const options = this.#options;
         if ((null === item) || ("object" !== typeof item) || (item instanceof Date)) {
-            const result = screen.print(format(item, options.format), {
+            return this.#print(screen, format(item, options.format), {
                 y,
                 size: options.size,
                 align: options.align,
                 clear: options.clear
-            });
-            return { ...result, y };
+            }, options.overflow);
         }
 
         if (undefined !== item.contrast)
@@ -108,16 +156,14 @@ class DisplayNode extends Node {
             y = Math.floor(Number(item.y)) || 0;
         else if (undefined !== item.line)
             y = (Math.max(1, Math.floor(Number(item.line)) || 1) - 1) * 8;
-        const result = screen.print(format(item.text, item.format ?? options.format), {
+        return this.#print(screen, format(item.text, item.format ?? options.format), {
             x: item.x,
             y,
             size: item.size ?? options.size,
             align: item.align ?? options.align,
             clear: item.clear ?? options.clear,
-            invert: item.invert,
-            wrap: item.wrap
-        });
-        return { ...result, y };
+            invert: item.invert
+        }, item.overflow ?? ((false === item.wrap) ? "cut" : options.overflow));
     }
 
     static type = "mcu-display";

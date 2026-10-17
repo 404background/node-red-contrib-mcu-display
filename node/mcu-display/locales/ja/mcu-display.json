@@ -7,7 +7,8 @@
             "align": "配置",
             "clear": "描画の前に",
             "name": "名前",
-            "format": "表示形式"
+            "format": "表示形式",
+            "overflow": "長い行"
         },
         "format": {
             "text": "文字列",
@@ -26,6 +27,11 @@
             "left": "左寄せ",
             "center": "中央",
             "right": "右寄せ"
+        },
+        "overflow": {
+            "wrap": "折り返す",
+            "scroll": "横にスクロール",
+            "cut": "切り捨てる"
         },
         "clear": {
             "area": "文字を書く行を消す",

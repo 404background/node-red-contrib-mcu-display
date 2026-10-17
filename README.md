@@ -41,10 +41,11 @@ Most modules use the I2C address `0x3C` (`0x3D` when the address jumper is chang
 
 | `msg.payload` | Result |
 |---|---|
-| `"Hello"`, `23.5` | Shown at the node's line, size and alignment. `\n` starts a new line; long lines wrap |
+| `"Hello"`, `23.5` | Shown at the node's line, size and alignment. `\n` starts a new line; long lines wrap (or scroll / are cut, see *Long lines*) |
 | `{ "text": "23.5°C", "line": 3, "size": 2, "align": "right" }` | One item; its properties override the node's settings (`x`, `y` in pixels, `invert`, `clear`, `wrap` too) |
 | `["Temp", { "text": "23.5°C", "size": 2 }]` | Items in order; an item without `line` / `y` goes below the previous one |
 | `1760000000000` (inject *timestamp*), a `Date` | With the format *Time (HH:MM:SS)*: `09:05:07`. Also *Time (HH:MM)*, *Date (YYYY-MM-DD)*, *Date and time*; a `Date` in *Text* shows date and time |
+| `"Node-RED MCU on XIAO ESP32C3: ..."` with *Long lines* set to *Scroll sideways* | A line longer than the screen scrolls from right to left until the next message (`{ "text": "...", "overflow": "scroll" }` for one item) |
 | `{ "clear": true }` | Clears the screen |
 | `{ "contrast": 128 }`, `{ "power": false }` | Brightness (0 - 255), display off / on |
 
@@ -56,7 +57,7 @@ Most modules use the I2C address `0x3C` (`0x3D` when the address jumper is chang
 
 ## Example
 
-`examples/display.json` (Import > Examples > @background404/node-red-contrib-mcu-display): a title in size 2, a counter updated every second, a clock (inject timestamp shown as HH:MM:SS), symbols, a mixed-size temperature, inverted text and clearing the screen.
+`examples/display.json` (Import > Examples > @background404/node-red-contrib-mcu-display): a title in size 2, a counter updated every second, a clock (inject timestamp shown as HH:MM:SS), symbols, a scrolling long text, a mixed-size temperature, inverted text and clearing the screen.
 
 ## How It Works
 

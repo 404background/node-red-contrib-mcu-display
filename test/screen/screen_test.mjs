@@ -53,7 +53,7 @@ for (let c = 0x20; c < 0x7F; c++)
 let screen = new Screen(128, 64);
 assert.equal(screen.takeDirty(), 0xFF, "a new screen is sent whole");
 let result = screen.print("Hi", { y: 8 });
-assert.deepEqual(result, { lines: ["Hi"], height: 8, skipped: "" });
+assert.deepEqual(result, { lines: ["Hi"], height: 8, skipped: "", overflow: false });
 assert.equal(screen.takeDirty(), 0x02, "only page 1 changed");
 assert.deepEqual(rows(screen, 8, 15, 12), [
     "#...#...#...",
@@ -106,6 +106,30 @@ result = screen.print("abcdefghijklmnopqrstuvwxyz", { wrap: false });
 assert.deepEqual(result.lines, ["abcdefghijklmnopqrstu"]);
 result = screen.print("one\ntwo\r\nthree");
 assert.deepEqual(result.lines, ["one", "two", "three"]);
+
+/* scroll: a long line is one ticker line that moves left and repeats */
+const ticker = "abcdefghijklmnopqrstuvwxyz";
+screen = new Screen(128, 64);
+result = screen.print(ticker, { y: 8, scroll: 0 });
+assert.deepEqual(result.lines, [ticker], "not wrapped");
+assert.equal(result.height, 8);
+assert.equal(result.overflow, true);
+const first = rows(screen, 8, 16);
+screen.print("a", { y: 8 });
+assert.deepEqual(rows(screen, 8, 16, 6), first.map(row => row.slice(0, 6)), "starts at the left like plain text");
+screen.print(ticker, { y: 8, scroll: 6 });
+screen.print("b", { y: 0, clear: "none" });
+assert.deepEqual(rows(screen, 8, 16, 6), rows(screen, 0, 8, 6), "6 pixels later the second character is first");
+screen.print(ticker, { y: 8, scroll: (ticker.length + 4) * 6 });
+assert.deepEqual(rows(screen, 8, 16), first, "repeats after the text and a 4 character gap");
+assert.equal(screen.print("short", { y: 16, scroll: 30 }).overflow, false, "a line that fits does not scroll");
+screen = new Screen(128, 64);
+screen.print(ticker, { x: 20, y: 0, scroll: 9 });
+assert.ok(rows(screen, 0, 8, 20).every(row => !row.includes("#")), "clipped to x");
+screen = new Screen(128, 64);
+screen.takeDirty();
+screen.print(ticker, { y: 24, scroll: 2 });
+assert.equal(screen.takeDirty(), 1 << 3, "a scroll step changes only its own page");
 
 /* characters not in the font */
 result = screen.print("Aあ°C");
