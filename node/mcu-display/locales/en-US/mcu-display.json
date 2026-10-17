@@ -39,6 +39,6 @@
             "all": "Clear the screen",
             "none": "Draw over the screen"
         },
-        "tip": "Shows <code>msg.payload</code>. Lines are 8 pixels high: a 128 x 64 display has lines 1 - 8, a 128 x 32 display lines 1 - 4. <code>\n</code> starts a new line. ASCII characters and the symbols <code>° ± × ÷ µ ¥ ← → ↑ ↓ ● ○ ■ □ ▲ ▼ ♥ ★ ♪ ✓ … █</code> can be shown."
+        "tip": "Shows <code>msg.payload</code>. Lines are 8 pixels high: a 128 x 64 display has lines 1 - 8, a 128 x 32 display lines 1 - 4. <code>\\n</code> starts a new line. ASCII characters and the symbols <code>° ± × ÷ µ ¥ ← → ↑ ↓ ● ○ ■ □ ▲ ▼ ♥ ★ ♪ ✓ … █</code> can be shown."
     }
 }

@@ -1,7 +1,10 @@
 /*
  * display/format - Turns a message value into the text to show
  *
- *   "text"      strings as they are, a Date as "YYYY-MM-DD HH:MM:SS",
+ *   "text"      strings as they are, with "\n" typed as two characters
+ *               (the inject node's string field) turned into a new line;
+ *               a Date, or milliseconds since 1970 between 2000 and 2099
+ *               (the inject node's timestamp), as "YYYY-MM-DD HH:MM:SS";
  *               anything else with String()
  *   "time"      "HH:MM:SS"
  *   "hm"        "HH:MM"
@@ -14,8 +17,17 @@
 
 export const FORMATS = Object.freeze(["text", "time", "hm", "date", "datetime"]);
 
+/* Numbers shown as a date in "text": milliseconds from 2000-01-01 to 2100-01-01 (UTC) */
+const TIMESTAMP_MIN = 946684800000;
+const TIMESTAMP_MAX = 4102444800000;
+
 function two(n) {
     return (n < 10) ? "0" + n : String(n);
+}
+
+/* The inject node's timestamp: Node-RED MCU sends Date.now() even for "JavaScript Date object" */
+function isTimestamp(value) {
+    return Number.isInteger(value) && (value >= TIMESTAMP_MIN) && (value < TIMESTAMP_MAX);
 }
 
 function toDate(value) {
@@ -38,8 +50,10 @@ export function format(value, kind = "text") {
     if (undefined === value)
         return "";
     if (!FORMATS.includes(kind) || ("text" === kind)) {
-        if (value instanceof Date)
+        if ((value instanceof Date) || isTimestamp(value))
             kind = "datetime";
+        else if ("string" === typeof value)
+            return value.replace(/\\n/g, "\n");
         else
             return String(value);
     }

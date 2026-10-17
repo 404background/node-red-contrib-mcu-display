@@ -6,7 +6,7 @@
         <dt>payload <span class="property-type">string | number | Date | object | array</span></dt>
         <dd>
             <ul>
-                <li><b>string, number</b>: shown at the node's line, size and alignment. <code>\n</code> starts a new line; text longer than the screen width wraps, scrolls or is cut as set by <b>Long lines</b>. Shown as set by <b>Format</b> (see below).</li>
+                <li><b>string, number</b>: shown at the node's line, size and alignment. A new line, or <code>\n</code> typed as two characters (for example in the inject node), starts a new line; text longer than the screen width wraps, scrolls or is cut as set by <b>Long lines</b>. Shown as set by <b>Format</b> (see below).</li>
                 <li><b>object</b>: one item, its properties override the node's settings:
                     <ul>
                         <li><code>text</code> - the text</li>
@@ -31,7 +31,7 @@
     <p>A character is 6 x 8 pixels times the text size. Lines are 8 pixels high, so a size 2 text on line 1 uses lines 1 and 2.</p>
     <p><b>Before drawing</b>: <i>Clear the lines of the text</i> lets several display nodes update their own lines of one screen. Sending an empty string clears the node's line.</p>
     <p><b>Long lines</b>: <i>Scroll sideways</i> moves a line that does not fit from right to left, about 40 pixels a second, and starts it again after a short gap. Lines that fit stay still. <i>Wrap and scroll up</i> wraps the text and, when it is taller than the space from the node's line to the bottom of the screen, moves it up about 20 pixels a second and starts it again after a blank line; it uses the screen from its line to the bottom. Scrolling stops when the node gets its next message.</p>
-    <p><b>Format</b>: <i>Text</i> shows strings and numbers as they are and a <code>Date</code> as <code>YYYY-MM-DD HH:MM:SS</code>. <i>Time (HH:MM:SS)</i>, <i>Time (HH:MM)</i>, <i>Date (YYYY-MM-DD)</i> and <i>Date and time</i> take a <code>Date</code>, milliseconds since 1970 (the inject node's <i>timestamp</i>) or a date string. A value that is not a date is shown as it is.</p>
+    <p><b>Format</b>: <i>Text</i> shows strings and numbers as they are, and a <code>Date</code> or the inject node's <i>timestamp</i> (an integer of milliseconds since 1970 for a time from 2000 to 2099) as <code>YYYY-MM-DD HH:MM:SS</code>. Node-RED MCU sends the timestamp as milliseconds even when the inject node is set to a JavaScript <code>Date</code> object. <i>Time (HH:MM:SS)</i>, <i>Time (HH:MM)</i>, <i>Date (YYYY-MM-DD)</i> and <i>Date and time</i> take a <code>Date</code>, milliseconds since 1970 (the inject node's <i>timestamp</i>) or a date string. A value that is not a date is shown as it is.</p>
     <p>Times are in the device's local time. The device's clock is set over Wi-Fi (SNTP) or by xsbug when debugging; without them it starts at 1970-01-01 00:00:00.</p>
     <p>Characters that are not in the font (for example Japanese) are shown as <code>?</code> with a warning.</p>
 </script>

@@ -41,10 +41,10 @@ Most modules use the I2C address `0x3C` (`0x3D` when the address jumper is chang
 
 | `msg.payload` | Result |
 |---|---|
-| `"Hello"`, `23.5` | Shown at the node's line, size and alignment. `\n` starts a new line; long lines wrap (or scroll / are cut, see *Long lines*) |
+| `"Hello"`, `23.5` | Shown at the node's line, size and alignment. `\n` (a new line, or the two characters typed in the inject node) starts a new line; long lines wrap (or scroll / are cut, see *Long lines*) |
 | `{ "text": "23.5°C", "line": 3, "size": 2, "align": "right" }` | One item; its properties override the node's settings (`x`, `y` in pixels, `invert`, `clear`, `wrap` too) |
 | `["Temp", { "text": "23.5°C", "size": 2 }]` | Items in order; an item without `line` / `y` goes below the previous one |
-| `1760000000000` (inject *timestamp*), a `Date` | With the format *Time (HH:MM:SS)*: `09:05:07`. Also *Time (HH:MM)*, *Date (YYYY-MM-DD)*, *Date and time*; a `Date` in *Text* shows date and time |
+| `1760000000000` (inject *timestamp*), a `Date` | With the format *Time (HH:MM:SS)*: `09:05:07`. Also *Time (HH:MM)*, *Date (YYYY-MM-DD)*, *Date and time*; in *Text*, a `Date` and a timestamp (2000 - 2099) show date and time. Node-RED MCU sends the timestamp as milliseconds even when the inject node is set to a JavaScript Date object |
 | `"Node-RED MCU on XIAO ESP32C3: ..."` with *Long lines* set to *Scroll sideways* | A line longer than the screen scrolls from right to left until the next message (`{ "text": "...", "overflow": "scroll" }` for one item). *Wrap and scroll up* (`"scrollup"`) wraps the text and scrolls it up when it does not fit between its line and the bottom of the screen |
 | `{ "clear": true }` | Clears the screen |
 | `{ "contrast": 128 }`, `{ "power": false }` | Brightness (0 - 255), display off / on |
