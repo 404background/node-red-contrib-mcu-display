@@ -11,8 +11,15 @@ import { Node } from "nodered";
 import Screen from "display/screen";
 import SSD1306 from "display/ssd1306";
 
+const NOT_FOUND = "display not found";
+
 /* Displays already started, by "address:data:clock" */
 let used;
+
+/* Node status for an error message, or "ready" */
+function status(error) {
+    return error ? { fill: "red", shape: "ring", text: error } : { fill: "green", shape: "dot", text: "ready" };
+}
 
 /* Pin from the editor, or the board's default I2C pin when empty */
 function pinOrDefault(value, fallback) {
@@ -84,10 +91,10 @@ class DisplayConfigNode extends Node {
             this.#screen.invalidate();
             this.#panel.flush(this.#screen);
         }
-        catch (e) {
+        catch {
             this.#panel.close();
-            this.#report("display not found");
-            return "display not found";
+            this.#report(NOT_FOUND);
+            return NOT_FOUND;
         }
         this.#report();
     }
@@ -95,21 +102,12 @@ class DisplayConfigNode extends Node {
     /* Shows the state on every attached node */
     #report(error) {
         for (const node of this.#nodes)
-            node.status(error ? { fill: "red", shape: "ring", text: error } : { fill: "green", shape: "dot", text: "ready" });
+            node.status(status(error));
     }
 
     attach(node) {
         this.#nodes.push(node);
-        if (this.#error)
-            node.status({ fill: "red", shape: "ring", text: this.#error });
-        else if (this.#panel.opened)
-            node.status({ fill: "green", shape: "dot", text: "ready" });
-        else
-            node.status({ fill: "red", shape: "ring", text: "display not found" });
-    }
-
-    get screen() {
-        return this.#screen;
+        node.status(status(this.#error ?? (this.#panel.opened ? undefined : NOT_FOUND)));
     }
 
     /*
@@ -130,7 +128,7 @@ class DisplayConfigNode extends Node {
             /* lost: open again on the next message */
             this.#panel.close();
             this.#screen.invalidate();
-            this.#report("display not found");
+            this.#report(NOT_FOUND);
             return e.message;
         }
     }

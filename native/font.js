@@ -4,6 +4,11 @@
  * Each glyph is 5 columns, left to right; bit 0 of a column is the top row.
  * Characters are drawn in a 6 x 8 cell (one blank column and row).
  * ASCII 0x20 - 0x7E plus the symbols in SYMBOLS.
+ *
+ * The ASCII glyphs are the 5 x 7 font of SparkFun's Nokia 5110 example
+ * (GraphicLCD_Nokia_5110, Firmware/Nokia-5100-LCD-Example/LCD_Functions.h),
+ * Copyright (c) 2016 SparkFun Electronics, MIT License: see
+ * THIRD_PARTY_NOTICES.md. "~" is redrawn; SYMBOLS are this package's own.
  */
 
 export const GLYPH_WIDTH = 5;

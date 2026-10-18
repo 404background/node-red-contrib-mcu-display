@@ -73,4 +73,6 @@ OLED モジュールの例（Amazon）：
 
 ## ライセンス
 
-MIT
+MIT（`LICENSE` を参照）。フォントの ASCII 文字は SparkFun の Nokia 5110 のサンプルのものです（MIT License、Copyright (c) 2016 SparkFun Electronics。`THIRD_PARTY_NOTICES.md` を参照）。
+
+ノードは [Node-RED MCU Edition](https://github.com/phoddie/node-red-mcu) と [Moddable SDK](https://github.com/Moddable-OpenSource/moddable) の上で動きます。これらはこのパッケージに含まれず、これらでビルドしたファームウェアにはそれぞれのライセンスも適用されます。

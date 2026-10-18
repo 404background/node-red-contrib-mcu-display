@@ -20,6 +20,7 @@
 import { Node } from "nodered";
 import Timer from "timer";
 import format, { FORMATS } from "display/format";
+import { textSize } from "display/screen";
 
 const CLEAR = Object.freeze(["area", "all", "none"]);
 const OVERFLOW = Object.freeze(["wrap", "cut", "scroll", "scrollup"]);
@@ -39,7 +40,7 @@ class DisplayNode extends Node {
 
         this.#options = {
             line: Math.max(1, Math.floor(Number(config.line)) || 1),
-            size: Math.max(1, Math.min(4, Math.floor(Number(config.size)) || 1)),
+            size: textSize(config.size),
             align: config.align || "left",
             clear: CLEAR.includes(config.clear) ? config.clear : "area",
             format: FORMATS.includes(config.format) ? config.format : "text",
@@ -127,8 +128,7 @@ class DisplayNode extends Node {
         const result = screen.print(text, options);
         if (result.overflow) {
             /* later steps redraw only the item's own lines */
-            const size = Math.max(1, Math.min(4, Math.floor(Number(options.size)) || 1));
-            this.#scrolling.push({ text, options: { ...options, size, clear: "area" } });
+            this.#scrolling.push({ text, options: { ...options, size: textSize(options.size), clear: "area" } });
         }
         return { ...result, y: options.y };
     }
@@ -139,24 +139,19 @@ class DisplayNode extends Node {
      */
     #item(screen, panel, item, y) {
         const options = this.#options;
-        if ((null === item) || ("object" !== typeof item) || (item instanceof Date)) {
-            return this.#print(screen, format(item, options.format), {
-                y,
-                size: options.size,
-                align: options.align,
-                clear: options.clear
-            }, options.overflow);
-        }
+        if ((null === item) || ("object" !== typeof item) || (item instanceof Date))
+            item = { text: item };      // a value: shown with the node's settings, undefined clears its line
+        else {
+            if (undefined !== item.contrast)
+                panel.contrast(item.contrast);
+            if (undefined !== item.power)
+                panel.power(item.power);
 
-        if (undefined !== item.contrast)
-            panel.contrast(item.contrast);
-        if (undefined !== item.power)
-            panel.power(item.power);
-
-        if (undefined === item.text) {
-            if ((true === item.clear) || ("all" === item.clear))
-                screen.clear();
-            return;
+            if (undefined === item.text) {
+                if ((true === item.clear) || ("all" === item.clear))
+                    screen.clear();
+                return;
+            }
         }
 
         if (undefined !== item.y)

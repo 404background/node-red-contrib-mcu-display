@@ -72,4 +72,6 @@ Most modules use the I2C address `0x3C` (`0x3D` when the address jumper is chang
 
 ## License
 
-MIT
+MIT (see `LICENSE`). The ASCII glyphs of the font come from SparkFun's Nokia 5110 example, MIT License, Copyright (c) 2016 SparkFun Electronics (see `THIRD_PARTY_NOTICES.md`).
+
+The nodes run on [Node-RED MCU Edition](https://github.com/phoddie/node-red-mcu) and the [Moddable SDK](https://github.com/Moddable-OpenSource/moddable), which this package does not include; firmware built with them is under their licenses as well.

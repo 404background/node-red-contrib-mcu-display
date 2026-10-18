@@ -9,10 +9,14 @@
 
 import { glyph, CELL_WIDTH, CELL_HEIGHT, GLYPH_WIDTH, GLYPH_HEIGHT } from "display/font";
 
-const MAX_SIZE = 4;
 const ALIGNS = Object.freeze(["left", "center", "right"]);
 const SCROLL_GAP = 4;     // blank characters between the end and the start of a scrolling line
 const SCROLL_UP_GAP = 1;  // blank lines between the end and the start of text scrolling up
+
+/* Text size 1 - 4 from a setting; 1 when it is not a number */
+export function textSize(value) {
+    return Math.min(4, Math.max(1, Math.floor(Number(value)) || 1));
+}
 
 class Screen {
     #width;
@@ -130,7 +134,7 @@ class Screen {
     print(text, options = {}) {
         const scroll = (undefined === options.scroll) ? undefined : Math.max(0, Math.floor(Number(options.scroll)) || 0);
         const scrollUp = (undefined === options.scrollUp) ? undefined : Math.max(0, Math.floor(Number(options.scrollUp)) || 0);
-        const size = Math.min(MAX_SIZE, Math.max(1, Math.floor(Number(options.size)) || 1));
+        const size = textSize(options.size);
         const x = Math.max(0, Math.floor(Number(options.x)) || 0);
         const y = Math.floor(Number(options.y)) || 0;
         const align = ALIGNS.includes(options.align) ? options.align : "left";
@@ -150,9 +154,10 @@ class Screen {
         const height = lines.length * cellHeight;
 
         const clear = options.clear ?? "area";
-        if ((true === clear) || ("all" === clear))
+        const all = (true === clear) || ("all" === clear);
+        if (all)
             this.clear();
-        if ((true === clear) || ("all" === clear) || ("area" === clear) || options.invert)
+        if (all || ("area" === clear) || options.invert)
             this.fill(x, y, this.#width - x, height, !!options.invert);
 
         const skipped = [];

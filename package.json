@@ -10,7 +10,8 @@
     "test/moddable/",
     "manifest.json",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md"
   ],
   "engines": {
     "node": ">=14.0.0"

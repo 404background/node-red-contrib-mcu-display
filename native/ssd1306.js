@@ -25,6 +25,7 @@ class SSD1306 {
     #options;
     #width;
     #height;
+    #on = false;    // display turned on (0xAF)
 
     /*
      * options: { controller: "ssd1306" | "ssd1315", width, height, address,
@@ -85,8 +86,6 @@ class SSD1306 {
         }
         this.#on = false;
     }
-
-    #on = false;
 
     close() {
         try {
