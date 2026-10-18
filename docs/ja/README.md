@@ -6,7 +6,7 @@ SSD1306 のモジュールはおもに 0.96 インチ 128 x 64 と 0.91 イン�
 
 English: [README.md](../../README.md)
 
-状況：Moddable のシミュレータで模擬ディスプレイを使ってテストし、Moddable SDK 7.2.1 / ESP-IDF 5.5.1 で ESP32 / XIAO ESP32S3 / XIAO ESP32C3 向けのビルドを確認しています。実機ではまだ確認していません。
+状況：Moddable のシミュレータで模擬ディスプレイを使ってテストし、Moddable SDK 7.2.1 / ESP-IDF 5.5.1 で ESP32 / XIAO ESP32S3 / XIAO ESP32C3 向けのビルドを確認しています。実機では XIAO ESP32C3 で表示を確認しました（設定ノードで SDA / SCL を 6 / 7 にします）。
 
 ## インストール
 

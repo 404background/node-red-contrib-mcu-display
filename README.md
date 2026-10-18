@@ -5,7 +5,7 @@ Shows text and symbols from the flow on an **SSD1306** or **SSD1315** OLED displ
 
 日本語: [docs/ja/README.md](docs/ja/README.md)
 
-Status: tested in the Moddable simulator with an emulated display and built for ESP32 / XIAO ESP32S3 / XIAO ESP32C3 with Moddable SDK 7.2.1 / ESP-IDF 5.5.1. Not tested on hardware yet.
+Status: tested in the Moddable simulator with an emulated display and built for ESP32 / XIAO ESP32S3 / XIAO ESP32C3 with Moddable SDK 7.2.1 / ESP-IDF 5.5.1. Shown on hardware with a XIAO ESP32C3 (set SDA / SCL to 6 / 7 in the config node).
 
 ## Install
 
