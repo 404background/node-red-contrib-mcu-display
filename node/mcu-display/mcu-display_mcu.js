@@ -10,6 +10,8 @@
  *   { contrast: 0 - 255 }, { power: false }  panel settings
  *   an array of these          drawn in order, sent to the panel once; an
  *       item without line / y goes below the previous one
+ * With a timeout (seconds, 0: never) the text of the last message is
+ * cleared that long after it was drawn.
  * Text longer than the screen width wraps, is cut, scrolls sideways or
  * wraps and scrolls up when it is taller than the space to the bottom of
  * the screen (overflow: "wrap" | "cut" | "scroll" | "scrollup"); scrolling
@@ -34,6 +36,9 @@ class DisplayNode extends Node {
     #options;
     #scrolling = [];    // { text, options } of items with lines that scroll
     #timer;
+    #timeout;           // ms until the text is cleared, 0: never
+    #areas = [];        // { x, y, height } of the text of the last message
+    #clearTimer;
 
     onStart(config) {
         super.onStart(config);
@@ -46,6 +51,7 @@ class DisplayNode extends Node {
             format: FORMATS.includes(config.format) ? config.format : "text",
             overflow: OVERFLOW.includes(config.overflow) ? config.overflow : "wrap"
         };
+        this.#timeout = Math.max(0, Math.round(Number(config.timeout) * 1000) || 0);
 
         const display = RED.nodes.getNode(config.display);
         if (!display?.attach) {
@@ -65,6 +71,7 @@ class DisplayNode extends Node {
         const payload = msg.payload;
         const items = Array.isArray(payload) ? payload : [payload];
         let shown, skipped = "";
+        const areas = [];
         this.#stopScrolling();
         const error = this.#display.draw((screen, panel) => {
             let y = (this.#options.line - 1) * 8;
@@ -73,6 +80,7 @@ class DisplayNode extends Node {
                 if (result) {
                     shown ??= result.lines.join(" ");
                     skipped += result.skipped;
+                    areas.push({ x: result.x, y: result.y, height: result.height });
                     y = result.y + result.height;
                 }
             }
@@ -85,6 +93,12 @@ class DisplayNode extends Node {
         }
         if (this.#scrolling.length)
             this.#timer = Timer.repeat(() => this.#scroll(), SCROLL_INTERVAL);
+        if (areas.length && this.#timeout) {
+            this.#areas = areas;
+            if (this.#clearTimer)
+                Timer.clear(this.#clearTimer);
+            this.#clearTimer = Timer.set(() => this.#clearText(), this.#timeout);
+        }
         if (skipped)
             this.warn(`not in the font (shown as ?): ${skipped}`);
         if (undefined !== shown)
@@ -98,6 +112,19 @@ class DisplayNode extends Node {
             Timer.clear(this.#timer);
         this.#timer = undefined;
         this.#scrolling = [];
+    }
+
+    /* Clears the text of the last message when the timeout has passed */
+    #clearText() {
+        this.#clearTimer = undefined;
+        this.#stopScrolling();
+        const areas = this.#areas;
+        this.#areas = [];
+        const error = this.#display.draw(screen => {
+            for (const { x, y, height } of areas)
+                screen.fill(x, y, screen.width - x, height, false);
+        });
+        this.status(error ? { fill: "red", shape: "ring", text: error } : { fill: "grey", shape: "ring", text: "cleared" });
     }
 
     /* Moves the scrolling lines one step; stops when the display is lost */
@@ -130,7 +157,7 @@ class DisplayNode extends Node {
             /* later steps redraw only the item's own lines */
             this.#scrolling.push({ text, options: { ...options, size: textSize(options.size), clear: "area" } });
         }
-        return { ...result, y: options.y };
+        return { ...result, x: Math.max(0, Math.floor(Number(options.x)) || 0), y: options.y };
     }
 
     /*

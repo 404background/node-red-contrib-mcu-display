@@ -1,37 +1,38 @@
 <script type="text/html" data-help-name="mcu-display">
-    <p><code>display config</code> ノードの OLED ディスプレイに文字や記号を表示します。</p>
+    <p><code>display config</code> ノードの OLED ディスプレイに <code>msg.payload</code> を表示します。</p>
 
     <h3>入力</h3>
     <dl class="message-properties">
         <dt>payload <span class="property-type">文字列 | 数値 | Date | オブジェクト | 配列</span></dt>
         <dd>
             <ul>
-                <li><b>文字列・数値</b>：ノードで設定した行・サイズ・配置で表示します。改行文字、または 2 文字で入力した <code>\n</code>（inject ノードの文字列など）で改行し、画面の幅より長い行は <b>長い行</b> の設定で折り返し・スクロール・切り捨てします。<b>表示形式</b>（下記）に従って表示します。</li>
-                <li><b>オブジェクト</b>：1 つの項目。プロパティがノードの設定より優先されます：
-                    <ul>
-                        <li><code>text</code> - 表示する文字列</li>
-                        <li><code>line</code>（1～）または <code>x</code>、<code>y</code> - 位置（左上からのピクセル）</li>
-                        <li><code>size</code>（1～4）、<code>align</code>（<code>"left"</code>、<code>"center"</code>、<code>"right"</code>）</li>
-                        <li><code>clear</code> - <code>"area"</code>、<code>"all"</code>、<code>"none"</code></li>
-                        <li><code>invert</code> - <code>true</code> で白地に黒文字</li>
-                        <li><code>overflow</code> - 画面より長い行：<code>"wrap"</code>（折り返す）、<code>"scroll"</code>（横にスクロール）、<code>"scrollup"</code>（上にスクロール）、<code>"cut"</code>（切り捨て）。<code>wrap: false</code> も切り捨て</li>
-                        <li><code>format</code> - <code>"text"</code>、<code>"time"</code>、<code>"hm"</code>、<code>"date"</code>、<code>"datetime"</code></li>
-                    </ul>
-                    <code>text</code> がないとき：<code>{ "clear": true }</code> で画面を消去、<code>{ "contrast": 0～255 }</code> で明るさ、<code>{ "power": false }</code> / <code>true</code> で表示のオフ / オン。
-                </li>
-                <li><b>配列</b>：項目を順番に描いて、まとめて表示します。<code>line</code> / <code>y</code> のない項目は前の項目の下に続くので、<code>["Temp", "23.5°C"]</code> は 2 行になります。</li>
+                <li><b>文字列・数値・Date</b>：ノードの設定で表示します。<code>\n</code> で改行します。</li>
+                <li><b>オブジェクト</b>：<code>{ "text": "23.5°C", "line": 3, "size": 2 }</code> のように、<code>text</code> とノードの設定を上書きする値（<code>line</code>、<code>x</code>・<code>y</code>（ピクセル）、<code>size</code>、<code>align</code>、<code>clear</code>、<code>invert</code>、<code>overflow</code>、<code>format</code>）を指定します。</li>
+                <li><b>配列</b>：項目を順に表示します。位置のない項目は前の項目の下に続きます。</li>
             </ul>
         </dd>
     </dl>
+
+    <h3>表示を消す</h3>
+    <ul>
+        <li><code>""</code>（空の文字列）：このノードの行を消す</li>
+        <li><code>{ "clear": true }</code>：画面全体を消す</li>
+        <li><code>{ "power": false }</code>：表示をオフ（<code>true</code> でオン）。<code>{ "contrast": 0～255 }</code> で明るさ</li>
+        <li><b>表示を消す</b> に秒数を入れると、最後に表示した文字をその時間の後に消します（0 で消さない）。次のメッセージで数え直します。</li>
+    </ul>
+
+    <h3>設定</h3>
+    <ul>
+        <li><b>行</b>：表示する位置。1 行は 8 ピクセルで、128 x 64 は 1～8 行、128 x 32 は 1～4 行です。複数の display ノードで 1 つの画面の別々の行を更新するときに使います。</li>
+        <li><b>文字サイズ</b>：2 以上はその数の行の高さを使います。</li>
+        <li><b>長い行</b>：画面の幅に入りきらない文を、折り返す・横にスクロール・折り返して上にスクロール・切り捨てる のどれにするか。スクロールは次のメッセージで止まります。</li>
+        <li><b>表示形式</b>：<code>Date</code>、inject ノードのタイムスタンプ、日付の文字列を時刻や日付で表示します。<i>文字列</i> でも <code>Date</code> とタイムスタンプは日付と時刻で表示します。</li>
+        <li><b>描画の前に</b>：文字を書く行を消す・画面全体を消す・消さずに重ねる。</li>
+    </ul>
 
     <h3>出力</h3>
     <p>表示を更新した後に、入力メッセージをそのまま出力します。</p>
 
     <h3>詳細</h3>
-    <p>1 文字は 6 x 8 ピクセルに文字サイズを掛けた大きさです。1 行は 8 ピクセルなので、サイズ 2 の文字を 1 行目に書くと 1・2 行目を使います。</p>
-    <p><b>描画の前に</b>：<i>文字を書く行を消す</i> にしておくと、1 つの画面の別々の行を複数の display ノードで更新できます。空の文字列を送るとそのノードの行を消します。</p>
-    <p><b>長い行</b>：<i>横にスクロール</i> にすると、画面に入りきらない行を右から左へ 1 秒に約 40 ピクセルの速さで流し、少し間を空けて繰り返します。入りきる行は動きません。<i>折り返して上にスクロール</i> にすると、折り返した文がノードの行から画面の下端までに入りきらないとき、1 秒に約 20 ピクセルの速さで上へ流し、1 行空けて繰り返します。ノードの行から下端までを使います。次のメッセージが来るとスクロールを止めます。</p>
-    <p><b>表示形式</b>：<i>文字列</i> は文字列・数値をそのまま、<code>Date</code> と inject ノードの <i>タイムスタンプ</i>（2000～2099 年の時刻を表す 1970 年からのミリ秒の整数）を <code>YYYY-MM-DD HH:MM:SS</code> で表示します。Node-RED MCU では inject ノードを JavaScript の <code>Date</code> オブジェクトに設定してもミリ秒で届きます。<i>時刻（HH:MM:SS）</i>、<i>時刻（HH:MM）</i>、<i>日付（YYYY-MM-DD）</i>、<i>日付と時刻</i> は、<code>Date</code>、1970 年からのミリ秒（inject ノードの <i>タイムスタンプ</i>）、日付の文字列を変換します。日付でない値はそのまま表示します。</p>
-    <p>時刻はデバイスのローカル時刻です。デバイスの時計は Wi-Fi（SNTP）または xsbug でのデバッグ時に合わせられます。どちらもないときは 1970-01-01 00:00:00 から始まります。</p>
-    <p>フォントにない文字（日本語など）は <code>?</code> で表示し、警告を出します。</p>
+    <p>時刻はデバイスのローカル時刻です（Wi-Fi の SNTP か xsbug で合わせます）。フォントにない文字（日本語など）は <code>?</code> で表示し、警告を出します。</p>
 </script>
