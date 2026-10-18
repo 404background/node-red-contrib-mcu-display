@@ -4,7 +4,7 @@
   "description": "Node-RED MCU nodes to show text and symbols on SSD1306 / SSD1315 OLED displays over I2C",
   "files": [
     "node/",
-    "native/",
+    "lib/",
     "examples/",
     "docs/",
     "test/moddable/",

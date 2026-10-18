@@ -63,8 +63,8 @@ OLED モジュールの例（Amazon）：
 
 ## しくみ
 
-- `native/screen.js`（`display/screen`）- コントローラの表示 RAM と同じページ配置の 1 ビットのフレームバッファ、`native/font.js`（`display/font`）の 5 x 7 フォントによる文字の描画、変更されたページの記録
-- `native/ssd1306.js`（`display/ssd1306`）- ボードの ECMA-419 I2C（`device.I2C.default`）でパネルを初期化し、変更されたページだけを送ります。SSD1315 も同じコマンドで動きます
+- `lib/screen.js`（`display/screen`）- コントローラの表示 RAM と同じページ配置の 1 ビットのフレームバッファ、`lib/font.js`（`display/font`）の 5 x 7 フォントによる文字の描画、変更されたページの記録
+- `lib/ssd1306.js`（`display/ssd1306`）- ボードの ECMA-419 I2C（`device.I2C.default`）でパネルを初期化し、変更されたページだけを送ります。SSD1315 も同じコマンドで動きます
 - 設定ノードがパネルとフレームバッファを持ち、display ノードはそれを通して描画します
 
 ## 開発

@@ -1,7 +1,7 @@
 {
     "include": [
         "$(MODDABLE)/examples/manifest_base.json",
-        "../../native/manifest.json"
+        "../../lib/manifest.json"
     ],
     "config": {
         "controller": "ssd1306",

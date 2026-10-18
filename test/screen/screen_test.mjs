@@ -1,5 +1,5 @@
 /*
- * Runs the MCU modules (native/font.js, native/format.js, native/screen.js, native/ssd1306.js)
+ * Runs the MCU modules (lib/font.js, lib/format.js, lib/screen.js, lib/ssd1306.js)
  * on Node.js with a mock I2C bus: npm test
  *   --show  prints the test screens as text
  */
@@ -10,10 +10,10 @@ import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 /* The modules import each other by their manifest names: copy them with file imports */
-const native = fileURLToPath(new URL("../../native/", import.meta.url));
+const lib = fileURLToPath(new URL("../../lib/", import.meta.url));
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), "mcu-display-"));
 for (const name of ["font", "format", "screen", "ssd1306"]) {
-    const source = fs.readFileSync(path.join(native, `${name}.js`), "utf8")
+    const source = fs.readFileSync(path.join(lib, `${name}.js`), "utf8")
         .replace(/from "display\/(\w+)"/g, (_, module) => `from "./${module}.mjs"`);
     fs.writeFileSync(path.join(dir, `${name}.mjs`), source);
 }

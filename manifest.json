@@ -1,6 +1,6 @@
 {
     "include": [
-        "./native/manifest.json"
+        "./lib/manifest.json"
     ],
     "modules": {
         "mcu-display-config_mcu": "./node/mcu-display-config/mcu-display-config_mcu",

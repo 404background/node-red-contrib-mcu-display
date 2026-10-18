@@ -2,7 +2,7 @@
 
 ## SparkFun GraphicLCD_Nokia_5110
 
-The ASCII glyphs of the 5 x 7 font in `native/font.js` come from the font table in `Firmware/Nokia-5100-LCD-Example/LCD_Functions.h` of https://github.com/sparkfun/GraphicLCD_Nokia_5110 (the `~` glyph is redrawn).
+The ASCII glyphs of the 5 x 7 font in `lib/font.js` come from the font table in `Firmware/Nokia-5100-LCD-Example/LCD_Functions.h` of https://github.com/sparkfun/GraphicLCD_Nokia_5110 (the `~` glyph is redrawn).
 
 ```
 The MIT License (MIT)

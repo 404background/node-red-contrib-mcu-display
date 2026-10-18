@@ -62,8 +62,8 @@ Most modules use the I2C address `0x3C` (`0x3D` when the address jumper is chang
 
 ## How It Works
 
-- `native/screen.js` (`display/screen`) - 1 bit frame buffer in the page layout of the controller's display RAM, text drawing with the 5 x 7 font of `native/font.js` (`display/font`), and tracking of changed pages
-- `native/ssd1306.js` (`display/ssd1306`) - Initializes the panel over the board's ECMA-419 I2C (`device.I2C.default`) and sends only the pages that changed. SSD1315 takes the same commands
+- `lib/screen.js` (`display/screen`) - 1 bit frame buffer in the page layout of the controller's display RAM, text drawing with the 5 x 7 font of `lib/font.js` (`display/font`), and tracking of changed pages
+- `lib/ssd1306.js` (`display/ssd1306`) - Initializes the panel over the board's ECMA-419 I2C (`device.I2C.default`) and sends only the pages that changed. SSD1315 takes the same commands
 - The config node owns the panel and the frame buffer; display nodes draw through it
 
 ## Development
