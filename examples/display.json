@@ -41,9 +41,8 @@
         "id": "d15b1a0000000020",
         "type": "mcu-display",
         "z": "d15b1a0000000001",
-        "name": "title (line 1, size 2)",
+        "name": "title (size 2)",
         "display": "d15b1a00000000c1",
-        "line": 1,
         "size": "2",
         "align": "center",
         "clear": "area",
@@ -85,7 +84,7 @@
         "type": "function",
         "z": "d15b1a0000000001",
         "name": "count",
-        "func": "const count = (context.get(\"count\") || 0) + 1;\ncontext.set(\"count\", count);\nmsg.payload = \"count: \" + count;\nreturn msg;",
+        "func": "const count = (context.get(\"count\") || 0) + 1;\ncontext.set(\"count\", count);\nmsg.payload = { text: \"count: \" + count, line: 3 };\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -107,9 +106,8 @@
         "id": "d15b1a0000000040",
         "type": "mcu-display",
         "z": "d15b1a0000000001",
-        "name": "count (line 3)",
+        "name": "count",
         "display": "d15b1a00000000c1",
-        "line": 3,
         "size": "1",
         "align": "left",
         "clear": "area",
@@ -145,6 +143,29 @@
         "y": 200,
         "wires": [
             [
+                "d15b1a0000000031"
+            ]
+        ],
+        "_mcu": {
+            "mcu": true
+        }
+    },
+    {
+        "id": "d15b1a0000000031",
+        "type": "function",
+        "z": "d15b1a0000000001",
+        "name": "line 4",
+        "func": "msg.payload = { text: msg.payload, line: 4 };\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 200,
+        "wires": [
+            [
                 "d15b1a0000000070"
             ]
         ],
@@ -156,14 +177,13 @@
         "id": "d15b1a0000000070",
         "type": "mcu-display",
         "z": "d15b1a0000000001",
-        "name": "time (line 4)",
+        "name": "time (HH:MM:SS)",
         "display": "d15b1a00000000c1",
-        "line": 4,
         "size": "1",
         "align": "right",
         "clear": "area",
         "format": "time",
-        "x": 340,
+        "x": 500,
         "y": 200,
         "wires": [
             []
@@ -188,8 +208,8 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "payload": "°±×←→↑↓●○■□♥★✓",
-        "payloadType": "str",
+        "payload": "{\"text\":\"°±×←→↑↓●○■□♥★✓\",\"line\":5}",
+        "payloadType": "json",
         "x": 130,
         "y": 260,
         "wires": [
@@ -216,8 +236,8 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "payload": "Node-RED MCU on XIAO ESP32C3: text longer than the screen scrolls sideways",
-        "payloadType": "str",
+        "payload": "{\"text\":\"Node-RED MCU on XIAO ESP32C3: text longer than the screen scrolls sideways\",\"line\":5}",
+        "payloadType": "json",
         "x": 140,
         "y": 320,
         "wires": [
@@ -233,9 +253,8 @@
         "id": "d15b1a0000000050",
         "type": "mcu-display",
         "z": "d15b1a0000000001",
-        "name": "line 5 (scroll)",
+        "name": "scroll",
         "display": "d15b1a00000000c1",
-        "line": 5,
         "size": "1",
         "align": "left",
         "clear": "area",
@@ -265,7 +284,7 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "payload": "[\"Temp\",{\"text\":\"23.5°C\",\"size\":2,\"align\":\"right\"}]",
+        "payload": "[{\"text\":\"Temp\",\"line\":6},{\"text\":\"23.5°C\",\"size\":2,\"align\":\"right\"}]",
         "payloadType": "json",
         "x": 140,
         "y": 380,
@@ -312,7 +331,6 @@
         "z": "d15b1a0000000001",
         "name": "lines 6 - 8",
         "display": "d15b1a00000000c1",
-        "line": 6,
         "size": "1",
         "align": "left",
         "clear": "area",

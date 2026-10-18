@@ -6,7 +6,7 @@
         <dt>payload <span class="property-type">文字列 | 数値 | Date | オブジェクト | 配列</span></dt>
         <dd>
             <ul>
-                <li><b>文字列・数値・Date</b>：ノードの設定で表示します。<code>\n</code> で改行します。</li>
+                <li><b>文字列・数値・Date</b>：画面の上から、ノードの設定で表示します。<code>\n</code> で改行します。</li>
                 <li><b>オブジェクト</b>：<code>{ "text": "23.5°C", "line": 3, "size": 2 }</code> のように、<code>text</code> とノードの設定を上書きする値（<code>line</code>、<code>x</code>・<code>y</code>（ピクセル）、<code>size</code>、<code>align</code>、<code>clear</code>、<code>invert</code>、<code>overflow</code>、<code>format</code>）を指定します。</li>
                 <li><b>配列</b>：項目を順に表示します。位置のない項目は前の項目の下に続きます。</li>
             </ul>
@@ -15,7 +15,7 @@
 
     <h3>表示を消す</h3>
     <ul>
-        <li><code>""</code>（空の文字列）：このノードの行を消す</li>
+        <li><code>""</code>（空の文字列）：1 行目を消す。<code>{ "text": "", "line": 3 }</code> で 3 行目</li>
         <li><code>{ "clear": true }</code>：画面全体を消す</li>
         <li><code>{ "power": false }</code>：表示をオフ（<code>true</code> でオン）。<code>{ "contrast": 0～255 }</code> で明るさ</li>
         <li><b>表示を消す</b> に秒数を入れると、最後に表示した文字をその時間の後に消します（0 で消さない）。次のメッセージで数え直します。</li>
@@ -23,7 +23,6 @@
 
     <h3>設定</h3>
     <ul>
-        <li><b>行</b>：表示する位置。1 行は 8 ピクセルで、128 x 64 は 1～8 行、128 x 32 は 1～4 行です。複数の display ノードで 1 つの画面の別々の行を更新するときに使います。</li>
         <li><b>文字サイズ</b>：2 以上はその数の行の高さを使います。</li>
         <li><b>長い行</b>：画面の幅に入りきらない文を、折り返す・横にスクロール・折り返して上にスクロール・切り捨てる のどれにするか。スクロールは次のメッセージで止まります。</li>
         <li><b>表示形式</b>：<code>Date</code>、inject ノードのタイムスタンプ、日付の文字列を時刻や日付で表示します。<i>文字列</i> でも <code>Date</code> とタイムスタンプは日付と時刻で表示します。</li>
@@ -34,5 +33,6 @@
     <p>表示を更新した後に、入力メッセージをそのまま出力します。</p>
 
     <h3>詳細</h3>
+    <p>1 つの画面に複数の display ノードで書くときは、メッセージの <code>line</code> で行を指定します。1 行は 8 ピクセルで、128 x 64 は 1～8 行、128 x 32 は 1～4 行です。</p>
     <p>時刻はデバイスのローカル時刻です（Wi-Fi の SNTP か xsbug で合わせます）。フォントにない文字（日本語など）は <code>?</code> で表示し、警告を出します。</p>
 </script>

@@ -2,7 +2,6 @@
     "mcu-display": {
         "label": {
             "display": "Display",
-            "line": "Line",
             "size": "Text size",
             "align": "Align",
             "clear": "Before drawing",

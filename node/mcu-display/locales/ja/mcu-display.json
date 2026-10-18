@@ -2,7 +2,6 @@
     "mcu-display": {
         "label": {
             "display": "ディスプレイ",
-            "line": "行",
             "size": "文字サイズ",
             "align": "配置",
             "clear": "描画の前に",

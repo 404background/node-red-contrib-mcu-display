@@ -6,7 +6,7 @@
         <dt>payload <span class="property-type">string | number | Date | object | array</span></dt>
         <dd>
             <ul>
-                <li><b>string, number, Date</b>: shown with the node's settings. <code>\n</code> starts a new line.</li>
+                <li><b>string, number, Date</b>: shown from the top of the screen with the node's settings. <code>\n</code> starts a new line.</li>
                 <li><b>object</b>: <code>text</code> and settings that override the node's, for example <code>{ "text": "23.5°C", "line": 3, "size": 2 }</code> (<code>line</code>, <code>x</code> / <code>y</code> in pixels, <code>size</code>, <code>align</code>, <code>clear</code>, <code>invert</code>, <code>overflow</code>, <code>format</code>).</li>
                 <li><b>array</b>: the items in order; an item without a position goes below the previous one.</li>
             </ul>
@@ -15,7 +15,7 @@
 
     <h3>Clearing the display</h3>
     <ul>
-        <li><code>""</code> (empty string): clears the node's lines</li>
+        <li><code>""</code> (empty string): clears line 1; <code>{ "text": "", "line": 3 }</code> clears line 3</li>
         <li><code>{ "clear": true }</code>: clears the screen</li>
         <li><code>{ "power": false }</code>: turns the display off (<code>true</code>: on). <code>{ "contrast": 0 - 255 }</code> sets the brightness</li>
         <li><b>Clear after</b>: the text of the last message is cleared after that many seconds (0: never). The next message starts the time again.</li>
@@ -23,7 +23,6 @@
 
     <h3>Settings</h3>
     <ul>
-        <li><b>Line</b>: where the text goes. A line is 8 pixels high: lines 1 - 8 on 128 x 64, 1 - 4 on 128 x 32. Lets several display nodes update their own lines of one screen.</li>
         <li><b>Text size</b>: size 2 or more uses that many lines in height.</li>
         <li><b>Long lines</b>: text wider than the screen wraps, scrolls sideways, wraps and scrolls up, or is cut. Scrolling stops at the next message.</li>
         <li><b>Format</b>: shows a <code>Date</code>, the inject node's timestamp or a date string as a time or date. <i>Text</i> also shows a <code>Date</code> and a timestamp as date and time.</li>
@@ -34,5 +33,6 @@
     <p>The input message, after the display has been updated.</p>
 
     <h3>Details</h3>
+    <p>To write on one screen from several display nodes, give the line in the message with <code>line</code>. A line is 8 pixels high: lines 1 - 8 on 128 x 64, 1 - 4 on 128 x 32.</p>
     <p>Times are in the device's local time (set over Wi-Fi with SNTP or by xsbug). Characters not in the font (for example Japanese) are shown as <code>?</code> with a warning.</p>
 </script>

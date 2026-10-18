@@ -5,9 +5,6 @@
         defaults: {
             name: { value: "" },
             display: { value: "", type: "mcu-display-config", required: true },
-            line: { value: 1, required: true, validate: function (v) {
-                return /^\d+$/.test(String(v)) && Number(v) >= 1 && Number(v) <= 8;
-            }},
             size: { value: "1", required: true },
             align: { value: "left", required: true },
             clear: { value: "area", required: true },
@@ -35,10 +32,6 @@
     <div class="form-row">
         <label for="node-input-display"><i class="fa fa-television"></i> <span data-i18n="mcu-display.label.display"></span></label>
         <input type="text" id="node-input-display">
-    </div>
-    <div class="form-row">
-        <label for="node-input-line"><i class="fa fa-list-ol"></i> <span data-i18n="mcu-display.label.line"></span></label>
-        <input type="number" id="node-input-line" min="1" max="8" style="width: 80px;">
     </div>
     <div class="form-row">
         <label for="node-input-format"><i class="fa fa-clock-o"></i> <span data-i18n="mcu-display.label.format"></span></label>

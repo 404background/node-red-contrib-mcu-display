@@ -2,8 +2,9 @@
  * mcu-display - MCU runtime
  *
  * Shows msg.payload on the display of its mcu-display-config node.
- *   string / number / boolean / Date  text at the node's line, size and
- *       alignment, formatted by the node's format (display/format)
+ *   string / number / boolean / Date  text from the top of the screen with
+ *       the node's size and alignment, formatted by the node's format
+ *       (display/format)
  *   { text, line, x, y, size, align, clear, invert, format }  one item; omitted
  *       properties come from the node
  *   { clear: true }            clears the screen
@@ -44,7 +45,6 @@ class DisplayNode extends Node {
         super.onStart(config);
 
         this.#options = {
-            line: Math.max(1, Math.floor(Number(config.line)) || 1),
             size: textSize(config.size),
             align: config.align || "left",
             clear: CLEAR.includes(config.clear) ? config.clear : "area",
@@ -74,7 +74,7 @@ class DisplayNode extends Node {
         const areas = [];
         this.#stopScrolling();
         const error = this.#display.draw((screen, panel) => {
-            let y = (this.#options.line - 1) * 8;
+            let y = 0;
             for (const item of items) {
                 const result = this.#item(screen, panel, item, y);
                 if (result) {
